@@ -1,5 +1,7 @@
 # fate-commander
 
+Alternate name: redshirt
+
 GM tool for creating and managing large numbers of NPCs using the FATE system.
 
 This tool is being designed primarily to simulate a starship crew, but as it develops I will probably work on generalising it more.
