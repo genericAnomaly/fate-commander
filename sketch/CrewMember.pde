@@ -1,21 +1,25 @@
 public class CrewMember {
   static final int SKILL_ATHLETICS = 0;
   static final int SKILL_BURGLARY = 1;
-  static final int SKILL_DECEIVE = 2;
-  static final int SKILL_PILOT = 3;
-  static final int SKILL_EMPATHY = 4;
-  static final int SKILL_FIGHT = 5;
-  static final int SKILL_INVESTIGATE = 6;
-  static final int SKILL_LORE = 7;
-  static final int SKILL_NOTICE = 8;
-  static final int SKILL_PHYSIQUE = 9;
-  static final int SKILL_PROVOKE = 10;
-  static final int SKILL_RAPPORT = 11;
-  static final int SKILL_SHOOT = 12;
-  static final int SKILL_STEALTH = 13;
-  static final int SKILL_WILL = 14;
+  static final int SKILL_CONTACTS = 2;
+  static final int SKILL_CRAFTS = 3;
+  static final int SKILL_DECEIVE = 4;
+  static final int SKILL_DRIVE = 5;
+  static final int SKILL_EMPATHY = 6;
+  static final int SKILL_FIGHT = 7;
+  static final int SKILL_INVESTIGATE = 8;
+  static final int SKILL_LORE = 9;
+  static final int SKILL_NOTICE = 10;
+  static final int SKILL_PHYSIQUE = 11;
+  static final int SKILL_PROVOKE = 12;
+  static final int SKILL_RAPPORT = 13;
+  static final int SKILL_RESOURCES = 14;
+  static final int SKILL_SHOOT = 15;
+  static final int SKILL_STEALTH = 16;
+  static final int SKILL_WILL = 17;
+  
 
-  static final int NUM_SKILLS = 15;
+  static final int NUM_SKILLS = 18;
   
   static final int GENDER_FEMALE = 0;
   static final int GENDER_MALE = 1;
@@ -49,11 +53,11 @@ public class CrewMember {
     fName = ( (gender == GENDER_FEMALE) ? femalenames[floor(random(femalenames.length))] : malenames[floor(random(malenames.length))] );
     skills = new int[NUM_SKILLS];
     int pyramidHeight = 3;  //I am not including a check for pyramids too large for the skill pool. The skill assignment loop is lazy and will loop indefinitely if you pick a pyramid height without enough skills to support it
-    for (int rank = 1; rank <= pyramidHeight; rank++) {
+    for (int rank = pyramidHeight; rank > 0; rank--) {
       for (int i = 0; i <= pyramidHeight-rank; i++) {
-        int s = floor(random(NUM_SKILLS));
+        int s = pickRandomSkillWeighted();
         while (skills[s] != 0) {
-          s = floor(random(NUM_SKILLS));
+          s = pickRandomSkillWeighted();
         }
         skills[s] = rank;
       }
