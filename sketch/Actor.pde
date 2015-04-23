@@ -1,4 +1,4 @@
-public class CrewMember {
+public class Actor {
   static final int SKILL_ATHLETICS = 0;
   static final int SKILL_BURGLARY = 1;
   static final int SKILL_CONTACTS = 2;
@@ -30,11 +30,11 @@ public class CrewMember {
   String lName;
   int gender;
   
-  CrewMember() {
+  Actor() {
     randomise();
   }
   
-  CrewMember(JSONObject s) {
+  Actor(JSONObject s) {
     if (s != null) { //yes I KNOW that's not how overloading works in Java I don't care.
       //load in from s
       loadJSON(s);
@@ -46,7 +46,7 @@ public class CrewMember {
   
   
   void randomise() {
-    //Randomly determine vital stats for this CrewMember. Called by constructor when a saved JSON crewmember is not provided.
+    //Randomly determine vital stats for this Actor. Called by constructor when a saved JSON crewmember is not provided.
     luck = floor(random(5));
     gender = floor(random(2));
     lName = lastnames[floor(random(lastnames.length))];
@@ -67,7 +67,7 @@ public class CrewMember {
 
   
   String toFlatString() {
-    //Return a human readable string representation of this CrewMember. Useful for debugging.
+    //Return a human readable string representation of this Actor. Useful for debugging.
     String toReturn = "";
     toReturn += "Name: " + fName + " " + lName + "\n";
     toReturn += "Luck: " + luck + "\n";
@@ -91,7 +91,7 @@ public class CrewMember {
   
   
   JSONObject toJSON() {
-    //Return this CrewMember in JSON notation for saving to file
+    //Return this Actor in JSON notation for saving to file
     JSONObject json = new JSONObject();
     json.setString("fName", fName);
     json.setString("lName", lName);
@@ -106,7 +106,7 @@ public class CrewMember {
   }
   
   void loadJSON(JSONObject json) {
-    //Load in this CrewMember from a saved JSONObject
+    //Load in this Actor from a saved JSONObject
     fName = json.getString("fName");
     lName = json.getString("lName");
     gender = json.getInt("gender");
