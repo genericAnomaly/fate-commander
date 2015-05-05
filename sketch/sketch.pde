@@ -21,7 +21,7 @@ void setup() {
   populateSkillNames();
   populateSkillWeight();
 
-
+  testLocations();
 }
 
 
@@ -39,8 +39,30 @@ void keyPressed() {
   if (key=='-' || key=='+') println("sizeToGenerate: " + genCrewSize);
   if (key=='p') printCrewManifest();
   //println("KeyPressed: " + key);
+  if (key=='h') print("Debug stuff\n'n'\tGenerate new crew\n's'\tSave crew\n'l'\tLoad crew\n'p'\tPrint crew\n+/-\tIncrease/decrease size of crew to generate");
 }
 
+
+Location[] locations;
+void testLocations() {
+  locations = new Location[2];
+  locations[0] = new Location("Location #1", "loc_1");
+  locations[1] = new Location("Location #2", "loc_2");
+  generateNewCrew(4);
+  printCrewManifest();
+  locations[0].addActor(crew[0]);
+  locations[0].addActor(crew[1]);
+  locations[0].addActor(crew[2]);
+  locations[1].addActor(crew[3]);
+  locations[0].printActors();
+  locations[1].printActors();
+  locations[1].addActor(crew[0]);
+  locations[0].printActors();
+  locations[1].printActors();
+  println("----");
+  locations[0].addChild(locations[1]);
+  locations[0].printLocation();
+}
 
 
 void generateNewCrew(int size) {
