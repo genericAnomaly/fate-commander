@@ -17,7 +17,7 @@ public class Location {
 
   //Actor occupation
   ArrayList actorList;
-  int capacity;  //This is not a hard limit, might consider this metadata?
+  int capacity;  //This is not a hard limit, might consider this metadata or associated with motives?
   
   //Location hierarchy
   Location parent;
@@ -41,6 +41,11 @@ public class Location {
     //Location hierarchy
     parent = null;
     childList = new ArrayList<Location>();
+  }
+  
+  Location (JSONObject s) {
+    //TODO
+    //Constructor to support loading from previously saved JSONObject
   }
   
   void addActor (Actor a) {
