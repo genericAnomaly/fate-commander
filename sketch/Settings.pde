@@ -4,6 +4,7 @@ public class Settings {
   String[] skillNames;
   float[] skillWeight;
   int numSkills;
+  int skillPeak;
   
   //Names
   String namesLast[];
@@ -37,6 +38,7 @@ public class Settings {
   JSONObject toJson() {
     JSONObject json = new JSONObject();
     json.setInt("numSkills", numSkills);
+    json.setInt("skillPeak", skillPeak);
     JSONArray a;
     a = new JSONArray();
     for (int i=0; i<skillNames.length; i++) a.setString(i, skillNames[i]);
@@ -50,10 +52,12 @@ public class Settings {
   void loadJson(JSONObject json) {
     //load defaults first to populate anything missing from the saved settings
     loadDefaults();
-    //Should this involve temp vars and null checks, or try/catch? Gotta test that.
+    //Should this involve temp vars and null checks, or try/catch? Answer: YES. VERY YES. THIS NEEDS FIXING
     numSkills = json.getInt("numSkills");
+    skillPeak = 3; //json.getInt("skillPeak"); 
     skillNames = json.getJSONArray("skillNames").getStringArray();
     skillWeight = jsonGetFloatArray(json.getJSONArray("skillWeight"));
+    validateSkillPeak();
   }
   
   float[] jsonGetFloatArray(JSONArray json) { //Because for some reason this was missing from the built-in JSONArray object when I wrote this
@@ -62,10 +66,19 @@ public class Settings {
     return a;
   }
   
+  void validateSkillPeak() {
+    //Ensure skillPeak is not set too high to generate a pyramid
+    int numActualSkills = 0;
+    for (int i=0; i < skillWeight.length; i++) {
+      if (skillWeight[i] > 0) numActualSkills++;
+    }
+    while ( (skillPeak*skillPeak+1)/2 > numActualSkills) skillPeak--;
+  }
   
   
   void setDefaultSkills() {
     numSkills = 18;
+    skillPeak = 3;
     skillNames = new String[numSkills];
     skillNames[Actor.SKILL_ATHLETICS]     = "Athletics";
     skillNames[Actor.SKILL_BURGLARY]      = "Burglary";
