@@ -1,3 +1,7 @@
+Settings SETTINGS; 
+
+
+
 String[] skillNames = new String[Actor.NUM_SKILLS];
 float[] skillWeight = new float[Actor.NUM_SKILLS];
 
@@ -11,6 +15,11 @@ int genCrewSize = 4;
 Actor[] crew;
 
 void setup() {
+  
+  SETTINGS = new Settings(loadJSONObject("save/settings.json"));
+  println(SETTINGS);
+  
+  /*
   print("Initialising...\n");
   lastnames = loadStrings(pwd+"last.txt");
   print("Loaded " + lastnames.length + " last names.\n");
@@ -20,9 +29,20 @@ void setup() {
   print("Loaded " + malenames.length + " male first names.\n");
   populateSkillNames();
   populateSkillWeight();
-
-  testLocations();
+  */
+  
+  //testLocations();
+  
+  //testSettings();
 }
+
+
+void testSettings() {
+  Settings s = new Settings(loadJSONObject("save/settings.json"));
+  //saveJSONObject(s.toJson(), "save/settings.json");
+  
+}
+
 
 
 
