@@ -30,6 +30,8 @@ public class Actor {
   String lName;
   int gender;
   
+  Location at;
+  
   Actor() {
     randomise();
   }
@@ -89,6 +91,9 @@ public class Actor {
     return toReturn;
   }
   
+  String getName() {
+    return fName + " " + lName;
+  }
   
   JSONObject toJSON() {
     //Return this Actor in JSON notation for saving to file
