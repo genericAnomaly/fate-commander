@@ -49,13 +49,14 @@ public static class JSONObjectReader {
     JSONArray array = getJSONArray(json, key, null);
     if (array == null) return fallback;
     
-    float[] floats;
-    try {
-      floats = new float[array.size()];
-      for (int i=0; i < floats.length; i++) floats[i] = array.getFloat(i);
-    } catch (Exception e) {
-      println("[Exception] getFloat() threw an exception for the value at " + key + "[" + i + "], using fallback values");
-      return fallback;
+    float[] floats = new float[array.size()];;
+    for (int i=0; i < floats.length; i++) {
+      try {
+         floats[i] = array.getFloat(i);
+      } catch (Exception e) {
+        println("[Exception] getFloat() threw an exception for the value at " + key + "[" + i + "], using fallback values");
+        return fallback;
+      }
     }
     return floats;
   }

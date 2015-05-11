@@ -56,7 +56,7 @@ public class Settings {
     numSkills = json.getInt("numSkills", numSkills);
     skillPeak = json.getInt("skillPeak", skillPeak);
     skillNames =  JSONObjectReader.getStringArray(json, "skillNames", skillNames);
-    skillWeight = JSOBObjectReader.getFloatArry(json, "skillWeight", skillWeight);
+    skillWeight = JSONObjectReader.getFloatArray(json, "skillWeight", skillWeight);
     //Validate everything
     validateSettings();
   }
