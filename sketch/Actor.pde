@@ -18,54 +18,61 @@ public class Actor {
   static final int SKILL_STEALTH = 16;
   static final int SKILL_WILL = 17;
   
-
-  static final int NUM_SKILLS = 18;
-  
   static final int GENDER_FEMALE = 0;
   static final int GENDER_MALE = 1;
   
-  int[] skills;
-  int luck;
+  //Character attributes
   String fName;
   String lName;
   int gender;
+  //Mechanical character attributes
+  int[] skills;
+  int luck;
+  //Aspects, etc, go here
   
+  //Program state
   Location at;
   
+  
+  //Constructors
   Actor() {
+    //No json provided so generate a random Actor
     randomise();
   }
   
-  Actor(JSONObject s) {
-    if (s != null) { //yes I KNOW that's not how overloading works in Java I don't care.
-      //load in from s
-      loadJSON(s);
-    } else {
-      //generate stats for a new crew member
-      randomise();
-    }
+  Actor(JSONObject json) {
+    //Load actor deets from provided json
+    loadJSON(json);
   }
   
   
   void randomise() {
     //Randomly determine vital stats for this Actor. Called by constructor when a saved JSON crewmember is not provided.
-    luck = floor(random(5));
+    luck = 1;
     gender = floor(random(2));
-    lName = lastnames[floor(random(lastnames.length))];
-    fName = ( (gender == GENDER_FEMALE) ? femalenames[floor(random(femalenames.length))] : malenames[floor(random(malenames.length))] );
-    skills = new int[NUM_SKILLS];
-    int pyramidHeight = 3;  //I am not including a check for pyramids too large for the skill pool. The skill assignment loop is lazy and will loop indefinitely if you pick a pyramid height without enough skills to support it
+    lName = SETTINGS.namesLast[floor(random(SETTINGS.namesLast.length))];
+    fName = ( (gender == GENDER_FEMALE) ? SETTINGS.namesFemale[floor(random(SETTINGS.namesFemale.length))] : SETTINGS.namesMale[floor(random(SETTINGS.namesMale.length))] );
+    skills = new int[SETTINGS.numSkills];
+    int pyramidHeight = SETTINGS.skillPeak;
     for (int rank = pyramidHeight; rank > 0; rank--) {
       for (int i = 0; i <= pyramidHeight-rank; i++) {
-        int s = pickRandomSkillWeighted();
+        int s = getWeightedRandomSkill();
         while (skills[s] != 0) {
-          s = pickRandomSkillWeighted();
+          s = getWeightedRandomSkill();
         }
         skills[s] = rank;
       }
     }
   }
   
+  int getWeightedRandomSkill() {
+    int s = -1;
+    while ( s == -1 || SETTINGS.skillWeight[s] <= random(1) ) {
+      //loop will run on first run and continue running until the skillWeight for s is satisfied 
+      s = floor(random(SETTINGS.numSkills));
+    }
+    return s;
+  }
 
   
   String toFlatString() {
@@ -74,15 +81,15 @@ public class Actor {
     toReturn += "Name: " + fName + " " + lName + "\n";
     toReturn += "Luck: " + luck + "\n";
     int topRank = 0;
-    for (int i = 0; i < NUM_SKILLS; i++) {
+    for (int i = 0; i < SETTINGS.numSkills; i++) {
       if (skills[i] > topRank) topRank = skills[i];
     }
     for (int i = topRank; i > 0; i--) {
       toReturn += "+" + i + " skills: ";
       String delim = "";
-      for (int j = 0; j < NUM_SKILLS; j++) {
+      for (int j = 0; j < SETTINGS.numSkills; j++) {
         if (skills[j] == i) {
-          toReturn += delim + skillNames[j];
+          toReturn += delim + SETTINGS.skillNames[j];
           delim = ", ";
         }
       }

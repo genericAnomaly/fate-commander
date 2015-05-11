@@ -1,28 +1,25 @@
-String[] skillNames = new String[Actor.NUM_SKILLS];
-float[] skillWeight = new float[Actor.NUM_SKILLS];
-
-String pwd = "";
-String lastnames[];
-String femalenames[];
-String malenames[];
-
+Settings SETTINGS; 
 
 int genCrewSize = 4;
 Actor[] crew;
 
 void setup() {
-  print("Initialising...\n");
-  lastnames = loadStrings(pwd+"last.txt");
-  print("Loaded " + lastnames.length + " last names.\n");
-  femalenames = loadStrings(pwd+"first_female.txt");
-  print("Loaded " + femalenames.length + " female first names.\n");
-  malenames = loadStrings(pwd+"first_male.txt");
-  print("Loaded " + malenames.length + " male first names.\n");
-  populateSkillNames();
-  populateSkillWeight();
-
+  
+  SETTINGS = new Settings(loadJSONObject("save/settings.json"));
+  println(SETTINGS);
+  
   testLocations();
+  
+  //testSettings();
 }
+
+
+void testSettings() {
+  Settings s = new Settings(loadJSONObject("save/settings.json"));
+  //saveJSONObject(s.toJson(), "save/settings.json");
+  
+}
+
 
 
 
@@ -133,56 +130,4 @@ void onLoadSelected (File f) {
 
 
 
-
-void populateSkillNames() {
-  skillNames[Actor.SKILL_ATHLETICS] = "Athletics";
-  skillNames[Actor.SKILL_BURGLARY] = "Burglary";
-  skillNames[Actor.SKILL_CRAFTS] = "Crafts";
-  skillNames[Actor.SKILL_CONTACTS] = "Contacts";
-  skillNames[Actor.SKILL_DECEIVE] = "Deceive";
-  skillNames[Actor.SKILL_DRIVE] = "Pilot";
-  skillNames[Actor.SKILL_EMPATHY] = "Empathy";
-  skillNames[Actor.SKILL_FIGHT] = "Fight";
-  skillNames[Actor.SKILL_INVESTIGATE] = "Investigate";
-  skillNames[Actor.SKILL_LORE] = "Science";
-  skillNames[Actor.SKILL_NOTICE] = "Notice";
-  skillNames[Actor.SKILL_PHYSIQUE] = "Physique";
-  skillNames[Actor.SKILL_PROVOKE] = "Provoke";
-  skillNames[Actor.SKILL_RAPPORT] = "Rapport";
-  skillNames[Actor.SKILL_RESOURCES] = "Resources";
-  skillNames[Actor.SKILL_SHOOT] = "Shoot";
-  skillNames[Actor.SKILL_STEALTH] = "Stealth";
-  skillNames[Actor.SKILL_WILL] = "Will";
-}
-
-void populateSkillWeight() {
-  skillWeight[Actor.SKILL_LORE] = 1.0;
-  skillWeight[Actor.SKILL_CRAFTS] = 0.8;
-  skillWeight[Actor.SKILL_INVESTIGATE] = 0.8;
-  skillWeight[Actor.SKILL_DECEIVE] = 0.6;
-  skillWeight[Actor.SKILL_EMPATHY] = 0.6;
-  skillWeight[Actor.SKILL_NOTICE] = 0.6;
-  skillWeight[Actor.SKILL_RAPPORT] = 0.6;
-  skillWeight[Actor.SKILL_WILL] = 0.6;
-  skillWeight[Actor.SKILL_ATHLETICS] = 0.5;
-  skillWeight[Actor.SKILL_DRIVE] = 0.5;
-  skillWeight[Actor.SKILL_FIGHT] = 0.5;
-  skillWeight[Actor.SKILL_PHYSIQUE] = 0.5;
-  skillWeight[Actor.SKILL_PROVOKE] = 0.5;
-  skillWeight[Actor.SKILL_SHOOT] = 0.5;
-  skillWeight[Actor.SKILL_BURGLARY] = 0.25;
-  skillWeight[Actor.SKILL_STEALTH] = 0.25;
-  skillWeight[Actor.SKILL_CONTACTS] = 0.0;
-  skillWeight[Actor.SKILL_RESOURCES] = 0.0;
-}
-
-int pickRandomSkillWeighted() {
-  //returns a random skill, influenced by skill weight
-  int s = -1;
-  while ( s == -1 || skillWeight[s] <= random(1) ) {
-    //loop will run on first run and continue running until the skillWeight for s is satisfied 
-    s = floor(random(Actor.NUM_SKILLS));
-  }
-  return s;
-}
 
