@@ -50,29 +50,46 @@ public class Settings {
   }
   
   void loadJson(JSONObject json) {
-    //load defaults first to populate anything missing from the saved settings
+    //Load defaults first to populate anything missing from the saved settings
     loadDefaults();
-    //Should this involve temp vars and null checks, or try/catch? Answer: YES. VERY YES. THIS NEEDS FIXING
-    numSkills = json.getInt("numSkills");
-    skillPeak = 3; //json.getInt("skillPeak"); 
-    skillNames = json.getJSONArray("skillNames").getStringArray();
-    skillWeight = jsonGetFloatArray(json.getJSONArray("skillWeight"));
-    validateSkillPeak();
+    //Read in values from json. If a value is missing or otherwise fails to read, fall back on the defaults.
+    numSkills = json.getInt("numSkills", numSkills);
+    skillPeak = json.getInt("skillPeak", skillPeak);
+    skillNames =  JSONObjectReader.getStringArray(json, "skillNames", skillNames);
+    skillWeight = JSOBObjectReader.getFloatArry(json, "skillWeight", skillWeight);
+    //Validate everything
+    validateSettings();
   }
   
-  float[] jsonGetFloatArray(JSONArray json) { //Because for some reason this was missing from the built-in JSONArray object when I wrote this
-    float[] a = new float[json.size()];
-    for (int i=0; i < a.length; i++) a[i] = json.getFloat(i);
-    return a;
-  }
-  
-  void validateSkillPeak() {
+  void validateSettings() {
     //Ensure skillPeak is not set too high to generate a pyramid
     int numActualSkills = 0;
     for (int i=0; i < skillWeight.length; i++) {
       if (skillWeight[i] > 0) numActualSkills++;
     }
+    if ( (skillPeak*skillPeak+1)/2 > numActualSkills) println("[Error] Not enough skills present to generate skill pyramids " + skillPeak + " tall. Adjusting value...");
     while ( (skillPeak*skillPeak+1)/2 > numActualSkills) skillPeak--;
+    
+    //Ensure skillNames and skillWeight are the same length
+    //If not, truncate or pad skillWeight to match skillNames
+    if (skillNames.length != skillWeight.length) {
+      println("[Error] Skill name and weight mismatch; adjusting...");
+      float[] newSkillWeight = new float[skillNames.length];
+      for (int i=0; i < skillNames.length; i++) {
+        if (i < skillWeight.length) {
+          newSkillWeight[i] = skillWeight[i];
+        } else {
+          newSkillWeight[i] = 1.0;
+        }
+      }
+      skillWeight = newSkillWeight;
+    }
+    
+    //Make sure numSkills is correct
+    if (numSkills != skillNames.length) {
+      println("[Error] " + skillNames.length + " skills are named but numSkills is " + numSkills + ". Setting numSkills to " + skillNames.length);
+    }
+    
   }
   
   
