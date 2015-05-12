@@ -67,10 +67,6 @@ public class Location extends CommanderObject {
     if (a.at != this) return;
     //remove Actor from actorList
     actorList.remove(a);
-      //The constant-time-order-doesn't-matter version that didn't work right away so I'm not fighting with:
-      //int i = actorList.indexOf(a);
-      //actorList.set(i, actorList.size()-1);
-      //actorList.remove(actorList.size()-1);
     //Clear Actor.at so it doesn't mistakenly call back here in future
     a.at = null;
   }
@@ -89,30 +85,25 @@ public class Location extends CommanderObject {
   }
   
   
-  void printActors() {
-    println("Actors present at " + nameLong);
-    ListIterator<Actor> i = actorList.listIterator();
-    while (i.hasNext()) {
-      Actor a = i.next();
-      println("- "+ a.getName());
-    }
+
+  
+  String toString () {
+    return toString("");
   }
   
-  void printLocation() {
-    printLocation("");
-  }
-  
-  void printLocation(String t) {
-    println(t + "[L] " + nameLong);
+  String toString (String t) {
+    String s = "";
+    s += t + "[L] " + nameLong + "\n";
     t = t + "  ";
     for (int i = 0; i < actorList.size(); i++) {
       Actor a = (Actor) actorList.get(i);
-      println(t + " > " + a.getName() );
+      s += t + a.toString(t);
     }
     for (int i = 0; i < childList.size(); i++) {
       Location l = (Location) childList.get(i);
-      l.printLocation(t);
+      s += l.toString(t);
     }
+    return s;
   }
   
 

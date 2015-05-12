@@ -1,4 +1,4 @@
-CommanderDocument sketchDocument = new CommanderDocument();
+CommanderDocument sketchDocument;
 
 Settings SETTINGS; 
 
@@ -6,11 +6,8 @@ int genCrewSize = 4;
 Actor[] crew;
 
 void setup() {
+  sketchDocument = new CommanderDocument();
   
-  
-  
-  SETTINGS = new Settings(loadJSONObject("save/settings.json"));
-  println(SETTINGS);
   
   testLocations();
   
@@ -20,6 +17,7 @@ void setup() {
 
 void testSettings() {
   Settings s = new Settings(loadJSONObject("save/settings.json"));
+  println(s);
   //saveJSONObject(s.toJson(), "save/settings.json");
   
 }
@@ -55,14 +53,14 @@ void testLocations() {
   locations[0].addActor(crew[1]);
   locations[0].addActor(crew[2]);
   locations[1].addActor(crew[3]);
-  locations[0].printActors();
-  locations[1].printActors();
+  //locations[0].printActors();
+  //locations[1].printActors();
   locations[1].addActor(crew[0]);
-  locations[0].printActors();
-  locations[1].printActors();
+  //locations[0].printActors();
+  //locations[1].printActors();
   println("----");
   locations[0].addChild(locations[1]);
-  locations[0].printLocation();
+  println(locations[0].toString());
 }
 
 
@@ -71,7 +69,7 @@ void generateNewCrew(int size) {
   print("Crew size: " + size + "\n");
   crew = new Actor[size];
   for (int i = 0; i < crew.length; i++) {
-    crew[i] = new Actor();
+    crew[i] = new Actor(sketchDocument);
   }
 }
 
@@ -89,7 +87,7 @@ void loadCrew(String path) {
   JSONArray j  = loadJSONArray(path);
   crew = new Actor[j.size()];
   for (int i = 0; i < crew.length; i++) {
-    crew[i] = new Actor(j.getJSONObject(i));
+    crew[i] = new Actor(sketchDocument, j.getJSONObject(i));
   }
   print("Loaded " + crew.length + " Crewmembers.\n");
 }
@@ -98,7 +96,7 @@ void printCrewManifest() {
   print("Printing Current Crew Manifest...\n");
   print("Crew size: " + crew.length + "\n");
   for (int i = 0; i < crew.length; i++) {
-    print(crew[i].toFlatString());
+    print(crew[i].toString());
   }
 }
 

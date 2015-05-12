@@ -27,6 +27,7 @@ public class Settings {
   
   void loadDefaults () {
     //load/set the default values
+    //NB: All Processing's load methods rely on a sketch global set by setup and accessible by running dataPath(""); to avoid frustration just stop making objects outside of setup
     namesLast = loadStrings("last.txt");
     namesFemale = loadStrings("first_female.txt");
     namesMale = loadStrings("first_male.txt");
@@ -131,6 +132,7 @@ public class Settings {
     String s = "Settings object\n";
     s += "Skills: " + numSkills + "\n";
     for (int i=0; i < numSkills; i++) s += "["+i+"] => \t" + skillNames[i] + " \t " + "(weight: " + skillWeight[i] + ")\n";
+    s += "Names (l/f/m): " + namesLast.length + "/" + namesFemale.length + "/" + namesMale.length + "\n";
     return s; 
   }
   
