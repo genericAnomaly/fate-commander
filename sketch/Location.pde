@@ -1,5 +1,3 @@
-import java.util.ListIterator;
-
 public class Location extends CommanderObject {
   //Locations represent any location, usually a room, a building, or an external area
   
@@ -50,6 +48,20 @@ public class Location extends CommanderObject {
     //TODO
     //Constructor to support loading from previously saved JSONObject
   }
+  
+  
+  void loadJson(JSONObject json) {
+    //TODO: stub
+  }
+  
+  JSONObject toJSON() {
+    //TODO: get this proper working, figure out the best way to save state stuff like actors and children (it's definitely IDs but we gotta implement that first)
+    JSONObject json = new JSONObject();
+    json.setString("nameLong", nameLong);
+    json.setString("nameShort", nameShort);
+    return json;
+  }
+  
   
   void addActor (Actor a) {
     //return if Actor is already here

@@ -1,0 +1,163 @@
+{
+  "settings": {
+    "skillWeight": [
+      0.5,
+      0.25,
+      0,
+      0.800000011920929,
+      0.6000000238418579,
+      0.5,
+      0.6000000238418579,
+      0.5,
+      0.800000011920929,
+      1,
+      0.6000000238418579,
+      0.5,
+      0.5,
+      0.6000000238418579,
+      0,
+      0.5,
+      0.25,
+      0.6000000238418579
+    ],
+    "skillNames": [
+      "Athletics",
+      "Burglary",
+      "Contacts",
+      "Engineering",
+      "Deceive",
+      "Pilot",
+      "Empathy",
+      "Fight",
+      "Investigate",
+      "Science",
+      "Notice",
+      "Physique",
+      "Provoke",
+      "Rapport",
+      "Resources",
+      "Shoot",
+      "Stealth",
+      "Will"
+    ],
+    "skillPeak": 3,
+    "numSkills": 18
+  },
+  "name": "Untitled Fate Commander Document",
+  "locationList": [
+    {
+      "nameLong": "Location #1",
+      "nameShort": "loc_1"
+    },
+    {
+      "nameLong": "Location #2",
+      "nameShort": "loc_2"
+    }
+  ],
+  "actorList": [
+    {
+      "skills": [
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        2,
+        0,
+        0,
+        0,
+        3
+      ],
+      "luck": 1,
+      "gender": 1,
+      "lName": "Gray",
+      "fName": "Terrell"
+    },
+    {
+      "skills": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        3,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        2
+      ],
+      "luck": 1,
+      "gender": 1,
+      "lName": "Styles",
+      "fName": "Dominic"
+    },
+    {
+      "skills": [
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        2,
+        1,
+        0,
+        0,
+        0,
+        0,
+        3
+      ],
+      "luck": 1,
+      "gender": 1,
+      "lName": "Kimple",
+      "fName": "Jonathon"
+    },
+    {
+      "skills": [
+        0,
+        2,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        3,
+        0,
+        2,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "luck": 1,
+      "gender": 1,
+      "lName": "White",
+      "fName": "Smoke"
+    }
+  ]
+}

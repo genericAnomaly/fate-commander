@@ -1,5 +1,5 @@
 public class CommanderDocument {
-  
+  String name;
   Settings settings;
   ArrayList<Actor> actorList;
   ArrayList<Location> locationList;
@@ -19,6 +19,7 @@ public class CommanderDocument {
   
   private void init() {
     //Initialise this document with the default values
+    name = "Untitled Fate Commander Document";
     settings = new Settings();
     actorList = new ArrayList<Actor>();
     locationList = new ArrayList<Location>();
@@ -30,6 +31,37 @@ public class CommanderDocument {
     return false;
   }
   
+  public JSONObject toJSON() {
+    JSONObject json = new JSONObject();
+    
+    json.setString("name", name);
+    json.setJSONObject( "settings", settings.toJSON() );
+    json.setJSONArray( "actorList", getActorsAsJson() );
+    json.setJSONArray( "locationList", getLocationsAsJson() );
+    
+    return json;
+  }
+  
+  public String toString() {
+    //TODO: stub
+    return "[Todo] write this method";
+  }
+  
+  public JSONArray getActorsAsJson() {
+    JSONArray a = new JSONArray();
+    for (int i = 0; i < actorList.size(); i++) {
+      a.setJSONObject(i, actorList.get(i).toJSON());
+    }
+    return a;
+  }
+  
+  public JSONArray getLocationsAsJson() {
+    JSONArray a = new JSONArray();
+    for (int i = 0; i < locationList.size(); i++) {
+      a.setJSONObject(i, locationList.get(i).toJSON());
+    }
+    return a;
+  }
   
   public void addActor(Actor a) {
     //TODO: stub
@@ -39,13 +71,8 @@ public class CommanderDocument {
     //TODO: stub
   }
   
-  public JSONObject toJson() {
-    //TODO: stub
-    return new JSONObject();
-  }
   
-  public String toString() {
-    //TODO: stub
-    return "[Todo] write this method";
-  }
+
+
+
 }

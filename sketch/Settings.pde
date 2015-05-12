@@ -36,7 +36,7 @@ public class Settings {
   
 
   
-  JSONObject toJson() {
+  JSONObject toJSON() {
     JSONObject json = new JSONObject();
     json.setInt("numSkills", numSkills);
     json.setInt("skillPeak", skillPeak);
