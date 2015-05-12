@@ -1,9 +1,13 @@
+CommanderDocument sketchDocument = new CommanderDocument();
+
 Settings SETTINGS; 
 
 int genCrewSize = 4;
 Actor[] crew;
 
 void setup() {
+  
+  
   
   SETTINGS = new Settings(loadJSONObject("save/settings.json"));
   println(SETTINGS);

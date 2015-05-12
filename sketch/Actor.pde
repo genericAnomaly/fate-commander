@@ -1,4 +1,4 @@
-public class Actor {
+public class Actor extends CommanderObject {
   static final int SKILL_ATHLETICS = 0;
   static final int SKILL_BURGLARY = 1;
   static final int SKILL_CONTACTS = 2;
@@ -36,11 +36,13 @@ public class Actor {
   
   //Constructors
   Actor() {
+    super(sketchDocument);
     //No json provided so generate a random Actor
     randomise();
   }
   
   Actor(JSONObject json) {
+    super(sketchDocument);
     //Load actor deets from provided json
     loadJSON(json);
   }

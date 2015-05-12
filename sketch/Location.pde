@@ -1,6 +1,6 @@
 import java.util.ListIterator;
 
-public class Location {
+public class Location extends CommanderObject {
   //Locations represent any location, usually a room, a building, or an external area
   
   //Roadmap:
@@ -31,6 +31,8 @@ public class Location {
   
   
   Location (String l, String s) {
+    super(sketchDocument);
+    
     //Metadata
     nameLong = l;
     nameShort = s;
@@ -44,6 +46,7 @@ public class Location {
   }
   
   Location (JSONObject s) {
+    super(sketchDocument);
     //TODO
     //Constructor to support loading from previously saved JSONObject
   }
