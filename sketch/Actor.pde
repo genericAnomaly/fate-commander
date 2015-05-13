@@ -44,7 +44,7 @@ public class Actor extends CommanderObject {
   Actor(CommanderDocument d, JSONObject json) {
     super(d);
     //Load actor deets from provided json
-    loadJson(json);
+    loadJSON(json);
   }
   
   
@@ -122,7 +122,7 @@ public class Actor extends CommanderObject {
     return json;
   }
   
-  void loadJson(JSONObject json) {
+  void loadJSON(JSONObject json) {
     //Load in this Actor from a saved JSONObject
     fName = json.getString("fName");
     lName = json.getString("lName");

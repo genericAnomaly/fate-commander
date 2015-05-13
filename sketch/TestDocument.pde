@@ -32,8 +32,8 @@ public class TestDocument extends CommanderDocument {
   
   void testLocations() {
     
-    locationList.add( new Location("Location #1", "loc_1") );
-    locationList.add( new Location("Location #2", "loc_2") );
+    locationList.add( new Location(this, "Location #1", "loc_1") );
+    locationList.add( new Location(this, "Location #2", "loc_2") );
     testNPCGeneration(4);
     printActors();
     locationList.get(0).addActor(actorList.get(0));

@@ -4,6 +4,7 @@ public class Location extends CommanderObject {
   //Roadmap:
   //[X] Locations house Actors
   //[X] Locations have child Locations
+  //[ ] Location to and from JSON works
   //[ ] Locations will satisfy specific Motives
   //[ ] Locations occupy a volume of space
   //[ ] Location pathfinding, probably node-based
@@ -28,30 +29,33 @@ public class Location extends CommanderObject {
   //PVector dimensions;
   
   
-  Location (String l, String s) {
-    super(sketchDocument);
-    
-    //Metadata
+  Location (CommanderDocument d, String l, String s) {
+    super(d);
+    init();
+    //Build from arguments
     nameLong = l;
     nameShort = s;
-    
-    //Actor occupation
+  }
+  
+  Location (CommanderDocument d, JSONObject json) {
+    super(d);
+    init();
+    loadJSON(json);
+  }
+  
+  private void init() {
+    //Initialise this Location with default values
+    //TODO: Should this talk to the document to make sure it gets a unique name?
+    nameLong = "Unnamed Location";
+    nameShort = "unnamed";
     actorList = new ArrayList<Actor>();
-    
-    //Location hierarchy
     parent = null;
     childList = new ArrayList<Location>();
   }
   
-  Location (JSONObject s) {
-    super(sketchDocument);
-    //TODO
-    //Constructor to support loading from previously saved JSONObject
-  }
-  
-  
-  void loadJson(JSONObject json) {
-    //TODO: stub
+  void loadJSON(JSONObject json) {
+    nameLong = json.getString("nameLong", nameLong);
+    nameShort = json.getString("nameShort", nameShort);
   }
   
   JSONObject toJSON() {
@@ -83,7 +87,6 @@ public class Location extends CommanderObject {
     a.at = null;
   }
 
-  //These two are almost identical to add/removeActor, so they're not annotated  
   void addChild (Location l) {
     if (l.parent == this) return;
     if (l.parent != null) l.parent.removeChild(l);

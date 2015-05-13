@@ -20,7 +20,7 @@ public class Settings {
   
   Settings(JSONObject json) {
     //json provided, read it in
-    loadJson(json);
+    loadJSON(json);
   }
   
   
@@ -50,7 +50,7 @@ public class Settings {
     return json;
   }
   
-  void loadJson(JSONObject json) {
+  void loadJSON(JSONObject json) {
     //Load defaults first to populate anything missing from the saved settings
     loadDefaults();
     //Read in values from json. If a value is missing or otherwise fails to read, fall back on the defaults.
