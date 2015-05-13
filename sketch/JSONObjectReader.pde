@@ -47,6 +47,21 @@ public static class JSONObjectReader {
   }
   
   
+  public static int[] getIntArray(JSONObject json, String key, int[] fallback) {
+    JSONArray array = getJSONArray(json, key, null);
+    if (array == null) return fallback;
+    
+    int[] ints;
+    try {
+      ints = array.getIntArray();
+    } catch (Exception e) {
+      println("[Exception] getIntArray() threw an exception for the array at " + key + ", using fallback values");
+      e.printStackTrace();
+      return fallback;
+    }
+    return ints;
+  }
+  
   public static String[] getStringArray(JSONObject json, String key, String[] fallback) {
     JSONArray array = getJSONArray(json, key, null);
     if (array == null) return fallback;

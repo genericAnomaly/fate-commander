@@ -37,12 +37,14 @@ public class Actor extends CommanderObject {
   //Constructors
   Actor(CommanderDocument d) {
     super(d);
+    init();
     //No json provided so generate a random Actor
     randomise();
   }
   
   Actor(CommanderDocument d, JSONObject json) {
     super(d);
+    init();
     //Load actor deets from provided json
     loadJSON(json);
   }
@@ -124,13 +126,20 @@ public class Actor extends CommanderObject {
   
   void loadJSON(JSONObject json) {
     //Load in this Actor from a saved JSONObject
-    fName = json.getString("fName");
-    lName = json.getString("lName");
-    gender = json.getInt("gender");
-    luck = json.getInt("luck");
-    JSONArray s = json.getJSONArray("skills");
-    skills = s.getIntArray();
+    fName = json.getString("fName", fName);
+    lName = json.getString("lName", lName);
+    gender = json.getInt("gender", gender);
+    luck = json.getInt("luck", luck);
+    skills = JSONObjectReader.getIntArray(json, "skills", skills); 
   }
   
+  private void init() {
+    //Initialise a blank actor
+    gender = 0;
+    fName = "Jane";
+    lName = "Doe";
+    luck = 0;
+    skills = new int[getDocumentSettings().numSkills];
+  } 
   
 }
