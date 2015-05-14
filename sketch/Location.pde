@@ -38,7 +38,7 @@ public class Location extends CommanderObject {
   }
   
   Location (CommanderDocument d, JSONObject json) {
-    super(d);
+    super(d, json);
     init();
     loadJSON(json);
   }

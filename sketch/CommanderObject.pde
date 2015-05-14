@@ -6,6 +6,11 @@ public abstract class CommanderObject {
     document = d;
   }
   
+  CommanderObject(CommanderDocument d, JSONObject json) {
+    document = d;
+    id = json.getInt("id", -1);
+  }
+  
   protected Settings getDocumentSettings() {
     return document.settings;
   }

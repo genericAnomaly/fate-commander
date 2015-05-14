@@ -61,6 +61,11 @@ public class CommanderDocument {
       error = true;
     }
     
+    if (!checkIDs()) {
+      println("[Notice] ID mismatch detected! Did you tweak your save file?");
+      repairIDs();
+    }
+    
     relinkIDs();
     
     return !error;
@@ -127,17 +132,60 @@ public class CommanderDocument {
   }
   
   public void relinkIDs() {
-    //This is the complement to setIDs and should only be run after reading in a document from JSON
+    //This should only ever be run after reading in a document from JSON and running checkIDs()
     //Runs through every child CommanderObject and restores relationships to other CommanderObjects based on relational IDs
     for (Actor a : actorList) {
-      locationList.get(a.locationID).addActor(a);
+      if (a.locationID >=0) locationList.get(a.locationID).addActor(a);
+      //a a.locationID value of -1 indicates an orphaned value, TODO: orphan handler location?
     }
     for (Location l : locationList) {
       //TODO
     }
   }
   
+  public Boolean checkIDs() {
+    //This is the complement to setIDs and should only be run after reading in a document from JSON
+    //Checks after that the id values of the loaded CommanderObjects match their actual keys
+    //Shouldn't ever return false unless the save file was manually edited
+    for (int i=0; i < actorList.size(); i++) if (actorList.get(i).getID() != i) return false;
+    for (int i=0; i < locationList.size(); i++) if (locationList.get(i).getID() != i) return false;
+    return true;
+  }
   
+  public void repairIDs() {
+    //Run this if checkIDs returns false
+    //Attempts to rebuild the CommanderObject lists and place everything at the indices indicated by their id values
+    println("[Warning] Attempting to rebuild document lists in accordance with incongruent ids from save. This can cause unexpected behaviour!");
+    Actor[] actors = new Actor[actorList.size()];
+    for (Actor a : actorList) {
+      println("  Processing Actor " + a.getName() + " with id " + a.getID());
+      if (a.getID() >= 0 && a.getID() < actors.length && actors[a.getID()] == null) {
+        actors[a.getID()] = a;
+      } else {
+        println("[Warning] Duplicate, missing, or OOB ID detected! Cannot automatically repair your save!");
+        return;
+      }
+    }
+    actorList = new ArrayList<Actor>(actors.length);
+    for (int i=0; i < actors.length; i++) {
+      actorList.add(actors[i]);
+    } 
+    
+    Location[] locations = new Location[locationList.size()];
+    for (Location l : locationList) {
+      println("  Processing Location " + l.nameShort + " with id " + l.getID());
+      if (l.getID() >= 0 && l.getID() < locations.length && locations[l.getID()] == null) {
+        locations[l.getID()] = l;
+      } else {
+        println("[Warnig] Duplicate, missing, or OOB ID detected! Cannot automatically repair your save!");
+        return;
+      }
+    }
+    locationList = new ArrayList<Location>(locations.length);
+    for (int i=0; i < locations.length; i++) {
+      locationList.add(locations[i]);
+    }
+  }
 
 
 

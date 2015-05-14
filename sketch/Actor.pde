@@ -45,7 +45,7 @@ public class Actor extends CommanderObject {
   }
   
   Actor(CommanderDocument d, JSONObject json) {
-    super(d);
+    super(d, json);
     init();
     //Load actor deets from provided json
     loadJSON(json);
