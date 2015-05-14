@@ -12,7 +12,7 @@ void setup() {
 
   JSONObject saveFile = loadJSONObject("save/testsave.json");
   testDocument = new TestDocument(saveFile);
-  testDocument.testLocations();
+  //testDocument.testLocations();
   println(testDocument);
   testDocument.testSave();
 }
