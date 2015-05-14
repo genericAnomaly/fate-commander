@@ -53,7 +53,9 @@ public class TestDocument extends CommanderDocument {
   
   void testSave() {
     JSONObject json = toJSON();
-    saveJSONObject(json, "save/testsave.json");
+    saveJSONObject(json, "save/testsave2.json");
   }
+  
+
   
 }

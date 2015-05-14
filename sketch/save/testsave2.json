@@ -1,0 +1,187 @@
+{
+  "settings": {
+    "skillWeight": [
+      0.5,
+      0.25,
+      0,
+      0.800000011920929,
+      0.6000000238418579,
+      0.5,
+      0.6000000238418579,
+      0.5,
+      0.800000011920929,
+      1,
+      0.6000000238418579,
+      0.5,
+      0.5,
+      0.6000000238418579,
+      0,
+      0.5,
+      0.25,
+      0.6000000238418579
+    ],
+    "skillNames": [
+      "Athletics",
+      "Burglary",
+      "Contacts",
+      "Engineering",
+      "Deceive",
+      "Pilot",
+      "Empathy",
+      "Fight",
+      "Investigate",
+      "Science",
+      "Notice",
+      "Physique",
+      "Provoke",
+      "Rapport",
+      "Resources",
+      "Shoot",
+      "Stealth",
+      "Will"
+    ],
+    "skillPeak": 3,
+    "numSkills": 18
+  },
+  "name": "Test Save",
+  "locationList": [
+    {
+      "id": 0,
+      "parentID": -1,
+      "nameLong": "Location #1",
+      "nameShort": "loc_1"
+    },
+    {
+      "id": 1,
+      "parentID": 0,
+      "nameLong": "Location #2",
+      "nameShort": "loc_2"
+    },
+    {
+      "id": 2,
+      "parentID": 0,
+      "nameLong": "Location #3",
+      "nameShort": "loc_3"
+    },
+    {
+      "id": 3,
+      "parentID": 1,
+      "nameLong": "Location #4",
+      "nameShort": "loc_4"
+    }
+  ],
+  "actorList": [
+    {
+      "skills": [
+        0,
+        0,
+        0,
+        1,
+        0,
+        3,
+        1,
+        0,
+        0,
+        2,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        2
+      ],
+      "id": 0,
+      "luck": 1,
+      "gender": 1,
+      "locationID": 1,
+      "lName": "Bicknell",
+      "fName": "August"
+    },
+    {
+      "skills": [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        3,
+        0,
+        2,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0
+      ],
+      "id": 1,
+      "luck": 1,
+      "gender": 1,
+      "locationID": 0,
+      "lName": "Schaeffer",
+      "fName": "Johnny"
+    },
+    {
+      "skills": [
+        2,
+        0,
+        0,
+        3,
+        1,
+        0,
+        0,
+        0,
+        2,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      "id": 2,
+      "luck": 1,
+      "gender": 0,
+      "locationID": 0,
+      "lName": "Palmer",
+      "fName": "Annika"
+    },
+    {
+      "skills": [
+        1,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        3,
+        1,
+        2,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "id": 3,
+      "luck": 1,
+      "gender": 1,
+      "locationID": 1,
+      "lName": "Taggart",
+      "fName": "Quinn"
+    }
+  ]
+}

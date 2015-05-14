@@ -31,8 +31,10 @@ public class Actor extends CommanderObject {
   //Aspects, etc, go here
   
   //Program state
-  Location at;
+  Location location;
   
+  //JSON relation ids
+  int locationID;
   
   //Constructors
   Actor(CommanderDocument d) {
@@ -43,7 +45,7 @@ public class Actor extends CommanderObject {
   }
   
   Actor(CommanderDocument d, JSONObject json) {
-    super(d);
+    super(d, json);
     init();
     //Load actor deets from provided json
     loadJSON(json);
@@ -116,6 +118,10 @@ public class Actor extends CommanderObject {
     json.setString("lName", lName);
     json.setInt("gender", gender);
     json.setInt("luck", luck);
+    json.setInt("id", getID());
+    locationID = -1;
+    if (location!=null) locationID = location.getID();
+    json.setInt("locationID", locationID);
     JSONArray s = new JSONArray();
     for (int i=0; i<skills.length; i++) {
       s.setInt(i, skills[i]);
@@ -130,7 +136,9 @@ public class Actor extends CommanderObject {
     lName = json.getString("lName", lName);
     gender = json.getInt("gender", gender);
     luck = json.getInt("luck", luck);
-    skills = JSONObjectReader.getIntArray(json, "skills", skills); 
+    skills = JSONObjectReader.getIntArray(json, "skills", skills);
+    //relations
+    locationID = json.getInt("locationID", -1);  //-1 = no location
   }
   
   private void init() {

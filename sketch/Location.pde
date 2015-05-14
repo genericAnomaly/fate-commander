@@ -22,6 +22,9 @@ public class Location extends CommanderObject {
   Location parent;
   ArrayList childList;
   
+  //JSON related IDs
+  int parentID;
+  
   //Location in space and pathing
   //(We'll deal with this stuff later)
   //ArrayList nodes;
@@ -38,7 +41,7 @@ public class Location extends CommanderObject {
   }
   
   Location (CommanderDocument d, JSONObject json) {
-    super(d);
+    super(d, json);
     init();
     loadJSON(json);
   }
@@ -56,6 +59,7 @@ public class Location extends CommanderObject {
   void loadJSON(JSONObject json) {
     nameLong = json.getString("nameLong", nameLong);
     nameShort = json.getString("nameShort", nameShort);
+    parentID = json.getInt("parentID", -1);
   }
   
   JSONObject toJSON() {
@@ -63,28 +67,32 @@ public class Location extends CommanderObject {
     JSONObject json = new JSONObject();
     json.setString("nameLong", nameLong);
     json.setString("nameShort", nameShort);
+    json.setInt("id", getID());
+    parentID = -1;
+    if (parent != null) parentID = parent.getID();
+    json.setInt("parentID", parentID);
     return json;
   }
   
-  
+  //TODO: Is it best practice to have Actor.location exposed like this?
   void addActor (Actor a) {
     //return if Actor is already here
-    if (a.at == this) return;
+    if (a.location == this) return;
     //Actor can only be in one Location, remove from previous Location
-    if (a.at != null) a.at.removeActor(a);
+    if (a.location != null) a.location.removeActor(a);
     //push Actor on actorList
     actorList.add(a);
-    //set Actor.at for easy lookups
-    a.at = this;
+    //set Actor.location for easy lookups
+    a.location = this;
   }
   
   void removeActor (Actor a) {
     //return in case Actor is not present (this should never happen)
-    if (a.at != this) return;
+    if (a.location != this) return;
     //remove Actor from actorList
     actorList.remove(a);
-    //Clear Actor.at so it doesn't mistakenly call back here in future
-    a.at = null;
+    //Clear Actor.location so it doesn't mistakenly call back here in future
+    a.location = null;
   }
 
   void addChild (Location l) {

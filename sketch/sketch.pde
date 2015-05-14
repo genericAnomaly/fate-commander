@@ -9,11 +9,12 @@ void setup() {
   //testDocument.testLoadSettings();
   //testDocument.testNPCGeneration(8);
   //testDocument.printActors();
-  //testDocument.testLocations();
-  //testDocument.testSave();
-  JSONObject saveFile = loadJSONObject("save/testsave.json");
+
+  JSONObject saveFile = loadJSONObject("save/testsave2.json");
   testDocument = new TestDocument(saveFile);
+  //testDocument.testLocations();
   println(testDocument);
+  //testDocument.testSave();
 }
 
 
