@@ -116,6 +116,8 @@ public class Actor extends CommanderObject {
     json.setString("lName", lName);
     json.setInt("gender", gender);
     json.setInt("luck", luck);
+    json.setInt("id", getID());
+    json.setInt("locationID", at.getID());
     JSONArray s = new JSONArray();
     for (int i=0; i<skills.length; i++) {
       s.setInt(i, skills[i]);

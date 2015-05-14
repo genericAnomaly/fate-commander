@@ -65,6 +65,8 @@ public class CommanderDocument {
   }
   
   public JSONObject toJSON() {
+    setIDs();
+    
     JSONObject json = new JSONObject();
     
     json.setString("name", name);
@@ -113,7 +115,13 @@ public class CommanderDocument {
     //TODO: stub
   }
   
-  
+  public void setIDs() {
+    //Set ID values on all child CommanderObjects to match their index in their containing ArrayLists
+    //Postcondition: This MUST be called by data export methods prior to calling ANY toJSON() methods
+    //               Failure to do so will result in missing or corrupted relation information being saved!
+    for (int i=0; i < actorList.size(); i++) actorList.get(i).setID(i);
+    for (int i=0; i < locationList.size(); i++) locationList.get(i).setID(i);
+  }
 
 
 

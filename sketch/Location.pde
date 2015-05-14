@@ -63,6 +63,7 @@ public class Location extends CommanderObject {
     JSONObject json = new JSONObject();
     json.setString("nameLong", nameLong);
     json.setString("nameShort", nameShort);
+    json.setInt("id", getID());
     return json;
   }
   
@@ -75,6 +76,7 @@ public class Location extends CommanderObject {
     //push Actor on actorList
     actorList.add(a);
     //set Actor.at for easy lookups
+    println("[debug] Setting " + a.getName() + "'s location to " + this.nameLong);
     a.at = this;
   }
   
