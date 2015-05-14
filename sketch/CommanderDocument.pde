@@ -62,7 +62,7 @@ public class CommanderDocument {
     }
     
     if (!checkIDs()) {
-      println("[Notice] ID mismatch detected! Did you tweak your save file?");
+      println("[Warning] ID mismatch detected! Did you tweak your save file?");
       repairIDs();
     }
     
@@ -135,11 +135,11 @@ public class CommanderDocument {
     //This should only ever be run after reading in a document from JSON and running checkIDs()
     //Runs through every child CommanderObject and restores relationships to other CommanderObjects based on relational IDs
     for (Actor a : actorList) {
-      if (a.locationID >=0) locationList.get(a.locationID).addActor(a);
+      if (a.locationID >= 0) locationList.get(a.locationID).addActor(a);
       //a a.locationID value of -1 indicates an orphaned value, TODO: orphan handler location?
     }
     for (Location l : locationList) {
-      //TODO
+      if (l.parentID >= 0) locationList.get(l.parentID).addChild(l);
     }
   }
   

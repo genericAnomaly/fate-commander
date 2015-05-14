@@ -22,6 +22,9 @@ public class Location extends CommanderObject {
   Location parent;
   ArrayList childList;
   
+  //JSON related IDs
+  int parentID;
+  
   //Location in space and pathing
   //(We'll deal with this stuff later)
   //ArrayList nodes;
@@ -56,6 +59,7 @@ public class Location extends CommanderObject {
   void loadJSON(JSONObject json) {
     nameLong = json.getString("nameLong", nameLong);
     nameShort = json.getString("nameShort", nameShort);
+    parentID = json.getInt("parentID", -1);
   }
   
   JSONObject toJSON() {
@@ -64,6 +68,9 @@ public class Location extends CommanderObject {
     json.setString("nameLong", nameLong);
     json.setString("nameShort", nameShort);
     json.setInt("id", getID());
+    parentID = -1;
+    if (parent != null) parentID = parent.getID();
+    json.setInt("parentID", parentID);
     return json;
   }
   
@@ -76,7 +83,6 @@ public class Location extends CommanderObject {
     //push Actor on actorList
     actorList.add(a);
     //set Actor.location for easy lookups
-    println("[debug] Setting " + a.getName() + "'s location to " + this.nameLong);
     a.location = this;
   }
   
