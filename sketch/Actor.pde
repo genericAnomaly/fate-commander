@@ -31,7 +31,7 @@ public class Actor extends CommanderObject {
   //Aspects, etc, go here
   
   //Program state
-  Location at;
+  Location location;
   
   //JSON relation ids
   int locationID;
@@ -120,7 +120,7 @@ public class Actor extends CommanderObject {
     json.setInt("luck", luck);
     json.setInt("id", getID());
     locationID = -1;
-    if (at!=null) locationID = at.getID();
+    if (location!=null) locationID = location.getID();
     json.setInt("locationID", locationID);
     JSONArray s = new JSONArray();
     for (int i=0; i<skills.length; i++) {

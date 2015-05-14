@@ -67,26 +67,26 @@ public class Location extends CommanderObject {
     return json;
   }
   
-  
+  //TODO: Is it best practice to have Actor.location exposed like this?
   void addActor (Actor a) {
     //return if Actor is already here
-    if (a.at == this) return;
+    if (a.location == this) return;
     //Actor can only be in one Location, remove from previous Location
-    if (a.at != null) a.at.removeActor(a);
+    if (a.location != null) a.location.removeActor(a);
     //push Actor on actorList
     actorList.add(a);
-    //set Actor.at for easy lookups
+    //set Actor.location for easy lookups
     println("[debug] Setting " + a.getName() + "'s location to " + this.nameLong);
-    a.at = this;
+    a.location = this;
   }
   
   void removeActor (Actor a) {
     //return in case Actor is not present (this should never happen)
-    if (a.at != this) return;
+    if (a.location != this) return;
     //remove Actor from actorList
     actorList.remove(a);
-    //Clear Actor.at so it doesn't mistakenly call back here in future
-    a.at = null;
+    //Clear Actor.location so it doesn't mistakenly call back here in future
+    a.location = null;
   }
 
   void addChild (Location l) {
