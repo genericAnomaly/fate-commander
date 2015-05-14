@@ -61,6 +61,8 @@ public class CommanderDocument {
       error = true;
     }
     
+    relinkIDs();
+    
     return !error;
   }
   
@@ -115,6 +117,7 @@ public class CommanderDocument {
     //TODO: stub
   }
   
+  //A quick word on IDs: They literally only matter on import/export, which is why we can steamroll them here
   public void setIDs() {
     //Set ID values on all child CommanderObjects to match their index in their containing ArrayLists
     //Postcondition: This MUST be called by data export methods prior to calling ANY toJSON() methods
@@ -122,6 +125,19 @@ public class CommanderDocument {
     for (int i=0; i < actorList.size(); i++) actorList.get(i).setID(i);
     for (int i=0; i < locationList.size(); i++) locationList.get(i).setID(i);
   }
+  
+  public void relinkIDs() {
+    //This is the complement to setIDs and should only be run after reading in a document from JSON
+    //Runs through every child CommanderObject and restores relationships to other CommanderObjects based on relational IDs
+    for (Actor a : actorList) {
+      locationList.get(a.locationID).addActor(a);
+    }
+    for (Location l : locationList) {
+      //TODO
+    }
+  }
+  
+  
 
 
 
