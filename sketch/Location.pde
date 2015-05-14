@@ -1,11 +1,10 @@
-import java.util.ListIterator;
-
-public class Location {
+public class Location extends CommanderObject {
   //Locations represent any location, usually a room, a building, or an external area
   
   //Roadmap:
   //[X] Locations house Actors
   //[X] Locations have child Locations
+  //[ ] Location to and from JSON works
   //[ ] Locations will satisfy specific Motives
   //[ ] Locations occupy a volume of space
   //[ ] Location pathfinding, probably node-based
@@ -30,23 +29,43 @@ public class Location {
   //PVector dimensions;
   
   
-  Location (String l, String s) {
-    //Metadata
+  Location (CommanderDocument d, String l, String s) {
+    super(d);
+    init();
+    //Build from arguments
     nameLong = l;
     nameShort = s;
-    
-    //Actor occupation
+  }
+  
+  Location (CommanderDocument d, JSONObject json) {
+    super(d);
+    init();
+    loadJSON(json);
+  }
+  
+  private void init() {
+    //Initialise this Location with default values
+    //TODO: Should this talk to the document to make sure it gets a unique name?
+    nameLong = "Unnamed Location";
+    nameShort = "unnamed";
     actorList = new ArrayList<Actor>();
-    
-    //Location hierarchy
     parent = null;
     childList = new ArrayList<Location>();
   }
   
-  Location (JSONObject s) {
-    //TODO
-    //Constructor to support loading from previously saved JSONObject
+  void loadJSON(JSONObject json) {
+    nameLong = json.getString("nameLong", nameLong);
+    nameShort = json.getString("nameShort", nameShort);
   }
+  
+  JSONObject toJSON() {
+    //TODO: get this proper working, figure out the best way to save state stuff like actors and children (it's definitely IDs but we gotta implement that first)
+    JSONObject json = new JSONObject();
+    json.setString("nameLong", nameLong);
+    json.setString("nameShort", nameShort);
+    return json;
+  }
+  
   
   void addActor (Actor a) {
     //return if Actor is already here
@@ -64,15 +83,10 @@ public class Location {
     if (a.at != this) return;
     //remove Actor from actorList
     actorList.remove(a);
-      //The constant-time-order-doesn't-matter version that didn't work right away so I'm not fighting with:
-      //int i = actorList.indexOf(a);
-      //actorList.set(i, actorList.size()-1);
-      //actorList.remove(actorList.size()-1);
     //Clear Actor.at so it doesn't mistakenly call back here in future
     a.at = null;
   }
 
-  //These two are almost identical to add/removeActor, so they're not annotated  
   void addChild (Location l) {
     if (l.parent == this) return;
     if (l.parent != null) l.parent.removeChild(l);
@@ -86,30 +100,25 @@ public class Location {
   }
   
   
-  void printActors() {
-    println("Actors present at " + nameLong);
-    ListIterator<Actor> i = actorList.listIterator();
-    while (i.hasNext()) {
-      Actor a = i.next();
-      println("- "+ a.getName());
-    }
+
+  
+  String toString () {
+    return toString("");
   }
   
-  void printLocation() {
-    printLocation("");
-  }
-  
-  void printLocation(String t) {
-    println(t + "[L] " + nameLong);
+  String toString (String t) {
+    String s = "";
+    s += t + "[L] " + nameLong + "\n";
     t = t + "  ";
     for (int i = 0; i < actorList.size(); i++) {
       Actor a = (Actor) actorList.get(i);
-      println(t + " > " + a.getName() );
+      s += t + a.toString(t);
     }
     for (int i = 0; i < childList.size(); i++) {
       Location l = (Location) childList.get(i);
-      l.printLocation(t);
+      s += l.toString(t);
     }
+    return s;
   }
   
 

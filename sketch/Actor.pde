@@ -1,4 +1,4 @@
-public class Actor {
+public class Actor extends CommanderObject {
   static final int SKILL_ATHLETICS = 0;
   static final int SKILL_BURGLARY = 1;
   static final int SKILL_CONTACTS = 2;
@@ -35,27 +35,31 @@ public class Actor {
   
   
   //Constructors
-  Actor() {
+  Actor(CommanderDocument d) {
+    super(d);
+    init();
     //No json provided so generate a random Actor
     randomise();
   }
   
-  Actor(JSONObject json) {
+  Actor(CommanderDocument d, JSONObject json) {
+    super(d);
+    init();
     //Load actor deets from provided json
     loadJSON(json);
   }
   
   
-  void randomise() {
+  private void randomise() {
     //Randomly determine vital stats for this Actor. Called by constructor when a saved JSON crewmember is not provided.
     luck = 1;
     gender = floor(random(2));
-    lName = SETTINGS.namesLast[floor(random(SETTINGS.namesLast.length))];
-    fName = ( (gender == GENDER_FEMALE) ? SETTINGS.namesFemale[floor(random(SETTINGS.namesFemale.length))] : SETTINGS.namesMale[floor(random(SETTINGS.namesMale.length))] );
-    skills = new int[SETTINGS.numSkills];
-    int pyramidHeight = SETTINGS.skillPeak;
-    for (int rank = pyramidHeight; rank > 0; rank--) {
-      for (int i = 0; i <= pyramidHeight-rank; i++) {
+    lName = getDocumentSettings().namesLast[floor(random(getDocumentSettings().namesLast.length))];
+    fName = ( (gender == GENDER_FEMALE) ? getDocumentSettings().namesFemale[floor(random(getDocumentSettings().namesFemale.length))] : getDocumentSettings().namesMale[floor(random(getDocumentSettings().namesMale.length))] );
+    skills = new int[getDocumentSettings().numSkills];
+    int skillPeak = getDocumentSettings().skillPeak;
+    for (int rank = skillPeak; rank > 0; rank--) {
+      for (int i = 0; i <= skillPeak-rank; i++) {
         int s = getWeightedRandomSkill();
         while (skills[s] != 0) {
           s = getWeightedRandomSkill();
@@ -67,35 +71,38 @@ public class Actor {
   
   int getWeightedRandomSkill() {
     int s = -1;
-    while ( s == -1 || SETTINGS.skillWeight[s] <= random(1) ) {
+    while ( s == -1 || getDocumentSettings().skillWeight[s] <= random(1) ) {
       //loop will run on first run and continue running until the skillWeight for s is satisfied 
-      s = floor(random(SETTINGS.numSkills));
+      s = floor(random(getDocumentSettings().numSkills));
     }
     return s;
   }
 
   
-  String toFlatString() {
-    //Return a human readable string representation of this Actor. Useful for debugging.
-    String toReturn = "";
-    toReturn += "Name: " + fName + " " + lName + "\n";
-    toReturn += "Luck: " + luck + "\n";
-    int topRank = 0;
-    for (int i = 0; i < SETTINGS.numSkills; i++) {
-      if (skills[i] > topRank) topRank = skills[i];
+  String toString() {
+    return toString("");
+  }
+  
+  String toString(String t) {
+    String s = "";
+    s += "[A] " + fName + " " + lName + " (" + luck + ")\n"; 
+    t = t + "  "; 
+    int peak = 0;
+    for (int i = 0; i < skills.length; i++) {
+      if (skills[i] > peak) peak = skills[i];
     }
-    for (int i = topRank; i > 0; i--) {
-      toReturn += "+" + i + " skills: ";
+    for (int i = peak; i > 0; i--) {
+      s += t + "+" + i + " ";
       String delim = "";
-      for (int j = 0; j < SETTINGS.numSkills; j++) {
+      for (int j = 0; j < skills.length; j++) {
         if (skills[j] == i) {
-          toReturn += delim + SETTINGS.skillNames[j];
+          s += delim + getDocumentSettings().skillNames[j];
           delim = ", ";
         }
       }
-      toReturn += "\n";
+      s += "\n";
     }
-    return toReturn;
+    return s;
   }
   
   String getName() {
@@ -119,13 +126,20 @@ public class Actor {
   
   void loadJSON(JSONObject json) {
     //Load in this Actor from a saved JSONObject
-    fName = json.getString("fName");
-    lName = json.getString("lName");
-    gender = json.getInt("gender");
-    luck = json.getInt("luck");
-    JSONArray s = json.getJSONArray("skills");
-    skills = s.getIntArray();
+    fName = json.getString("fName", fName);
+    lName = json.getString("lName", lName);
+    gender = json.getInt("gender", gender);
+    luck = json.getInt("luck", luck);
+    skills = JSONObjectReader.getIntArray(json, "skills", skills); 
   }
   
+  private void init() {
+    //Initialise a blank actor
+    gender = 0;
+    fName = "Jane";
+    lName = "Doe";
+    luck = 0;
+    skills = new int[getDocumentSettings().numSkills];
+  } 
   
 }
