@@ -1,4 +1,9 @@
 public class Actor extends CommanderObject {
+  
+  // Constants
+  //================================================================
+  
+  //Skill indices (move to Settings maybe?)
   static final int SKILL_ATHLETICS = 0;
   static final int SKILL_BURGLARY = 1;
   static final int SKILL_CONTACTS = 2;
@@ -18,25 +23,32 @@ public class Actor extends CommanderObject {
   static final int SKILL_STEALTH = 16;
   static final int SKILL_WILL = 17;
   
+  //Gender indices
   static final int GENDER_FEMALE = 0;
   static final int GENDER_MALE = 1;
   
-  //Character attributes
+  // Instance variables
+  //================================================================
+  
+  // Narrative character attributes
   String fName;
   String lName;
   int gender;
-  //Mechanical character attributes
+  // Mechanical character attributes
   int[] skills;
   int luck;
   //Aspects, etc, go here
   
-  //Program state
+  //CommanderObject relationships
   Location location;
   
-  //JSON relation ids
+  //JSON Export
   int locationID;
   
-  //Constructors
+  
+  // Constructors
+  //================================================================
+  
   Actor(CommanderDocument d) {
     super(d);
     init();
@@ -52,34 +64,30 @@ public class Actor extends CommanderObject {
   }
   
   
+  // Initialisers
+  //================================================================
+  
+  private void init() {
+    //Initialise a blank actor
+    gender = 0;
+    fName = "Jane";
+    lName = "Doe";
+    luck = 0;
+    skills = new int[getDocumentSettings().numSkills];
+  } 
+  
   private void randomise() {
-    //Randomly determine vital stats for this Actor. Called by constructor when a saved JSON crewmember is not provided.
+    //Generate random vital stats for this Actor.
     luck = 1;
     gender = floor(random(2));
-    lName = getDocumentSettings().namesLast[floor(random(getDocumentSettings().namesLast.length))];
-    fName = ( (gender == GENDER_FEMALE) ? getDocumentSettings().namesFemale[floor(random(getDocumentSettings().namesFemale.length))] : getDocumentSettings().namesMale[floor(random(getDocumentSettings().namesMale.length))] );
-    skills = new int[getDocumentSettings().numSkills];
-    int skillPeak = getDocumentSettings().skillPeak;
-    for (int rank = skillPeak; rank > 0; rank--) {
-      for (int i = 0; i <= skillPeak-rank; i++) {
-        int s = getWeightedRandomSkill();
-        while (skills[s] != 0) {
-          s = getWeightedRandomSkill();
-        }
-        skills[s] = rank;
-      }
-    }
+    lName = getDocumentSettings().getRandomLastName();
+    fName = getDocumentSettings().getRandomFirstName(gender);
+    skills = getDocumentSettings().getRandomSkillPyramid();
   }
   
-  int getWeightedRandomSkill() {
-    int s = -1;
-    while ( s == -1 || getDocumentSettings().skillWeight[s] <= random(1) ) {
-      //loop will run on first run and continue running until the skillWeight for s is satisfied 
-      s = floor(random(getDocumentSettings().numSkills));
-    }
-    return s;
-  }
-
+  
+  // toStrings [and related convenience String returning methods]
+  //================================================================
   
   String toString() {
     return toString("");
@@ -111,6 +119,10 @@ public class Actor extends CommanderObject {
     return fName + " " + lName;
   }
   
+  
+  // JSON save/load
+  //================================================================
+  
   JSONObject toJSON() {
     //Return this Actor in JSON notation for saving to file
     JSONObject json = new JSONObject();
@@ -141,13 +153,6 @@ public class Actor extends CommanderObject {
     locationID = json.getInt("locationID", -1);  //-1 = no location
   }
   
-  private void init() {
-    //Initialise a blank actor
-    gender = 0;
-    fName = "Jane";
-    lName = "Doe";
-    luck = 0;
-    skills = new int[getDocumentSettings().numSkills];
-  } 
+
   
 }

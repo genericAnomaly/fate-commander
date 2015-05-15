@@ -7,11 +7,13 @@ void setup() {
   
   //testDocument = new TestDocument();
   //testDocument.testLoadSettings();
-  //testDocument.testNPCGeneration(8);
   //testDocument.printActors();
 
   JSONObject saveFile = loadJSONObject("save/testsave2.json");
   testDocument = new TestDocument(saveFile);
+  
+  testDocument.testNPCGeneration(8);
+  
   //testDocument.testLocations();
   println(testDocument);
   //testDocument.testSave();

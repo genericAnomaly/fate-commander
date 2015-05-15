@@ -12,7 +12,7 @@ public class Settings {
   String namesMale[];
   
   
-  
+  //Constructors
   Settings() {
     //No argument supplied, load the defaults
     loadDefaults();
@@ -136,6 +136,32 @@ public class Settings {
     return s; 
   }
   
-  
+  //Actor generation helpers
+  String getRandomFirstName(int gender) {
+    return ( (gender == Actor.GENDER_FEMALE) ? namesFemale[floor(random(namesFemale.length))] : namesMale[floor(random(namesMale.length))] );
+  }
+  String getRandomLastName() {
+    return namesLast[floor(random(namesLast.length))];
+  }
+  int[] getRandomSkillPyramid() {
+    int[] skills = new int[numSkills];
+    for (int rank = skillPeak; rank > 0; rank--) {
+      for (int i = 0; i <= skillPeak-rank; i++) {
+        int s = getRandomSkill();
+        while (skills[s] != 0) {
+          s = getRandomSkill();
+        }
+        skills[s] = rank;
+      }
+    }
+    return skills;
+  }
+  int getRandomSkill() {
+    int s = -1;
+    while ( s == -1 || skillWeight[s] <= random(1) ) {
+      s = floor(random(numSkills));
+    }
+    return s;
+  }
   
 }

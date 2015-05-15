@@ -3,14 +3,14 @@ public static class JSONObjectReader {
   
   /*
   JSONObject functions to wrap
-  getJSONArray()   Gets the JSONArray value associated with a key
-  getJSONObject()  Gets the JSONObject value associated with a key
+  [x] getJSONArray()   Gets the JSONArray value associated with a key
+  [x] getJSONObject()  Gets the JSONObject value associated with a key
   
   JSONArray functions to wrap
-  getStringArray()      Gets the entire array as an array of Strings
-  getIntArray()         Gets the entire array as array of ints
-  getFloatArray()       <Unimplemented>
-  getJSONObjectArray()  <Unimplemented>
+  [x] getStringArray()      Gets the entire array as an array of Strings
+  [x] getIntArray()         Gets the entire array as array of ints
+  [x] getFloatArray()       <Unimplemented>
+  [x] getJSONObjectArray()  <Unimplemented>
   */
   
   public static JSONArray getJSONArray(JSONObject json, String key) {
@@ -94,15 +94,6 @@ public static class JSONObjectReader {
     return floats;
   }
   
-  /*
-  public static <T> ArrayList<T> getGenericArrayList(JSONObject json, String key) {
-    JSONArray array = getJSONArray(json, key);
-    ArrayList<T> list = new ArrayList<T>(array.size());
-    //I didn't think this through, it /almost/ works but the CommanderDocument can't be passed to any Ts this creates :/
-    //Learned a bit about generics though, that's a plus 
-    return list;
-  }
-  */
   
   public static JSONObject[] getJSONObjectArray(JSONObject json, String key) {
     return getJSONObjectArray(json, key, null);
