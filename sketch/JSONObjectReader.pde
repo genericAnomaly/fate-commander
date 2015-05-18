@@ -3,14 +3,18 @@ public static class JSONObjectReader {
   
   /*
   JSONObject functions to wrap
-  getJSONArray()   Gets the JSONArray value associated with a key
-  getJSONObject()  Gets the JSONObject value associated with a key
+  [x] getJSONArray()        Gets the JSONArray value associated with a key
+  [x] getJSONObject()       Gets the JSONObject value associated with a key
   
-  JSONArray functions to wrap
-  getStringArray()      Gets the entire array as an array of Strings
-  getIntArray()         Gets the entire array as array of ints
-  getFloatArray()       <Unimplemented>
-  getJSONObjectArray()  <Unimplemented>
+  
+  JSONArray functions to wrap (Note these are just called on JSONObjects and a key containing an array)
+  [x] getStringArray()      Gets an array at key as an array of Strings
+  [x] getIntArray()         Gets an array at key as array of ints
+  
+  New functions
+  [x] getFloatArray()       Gets an array at key as array of floats
+  [x] getJSONObjectArray()  Gets an array at key as array of JSONObjects
+  [x] getBoolean()          Gets a Boolean value associated with a key
   */
   
   public static JSONArray getJSONArray(JSONObject json, String key) {
@@ -94,15 +98,6 @@ public static class JSONObjectReader {
     return floats;
   }
   
-  /*
-  public static <T> ArrayList<T> getGenericArrayList(JSONObject json, String key) {
-    JSONArray array = getJSONArray(json, key);
-    ArrayList<T> list = new ArrayList<T>(array.size());
-    //I didn't think this through, it /almost/ works but the CommanderDocument can't be passed to any Ts this creates :/
-    //Learned a bit about generics though, that's a plus 
-    return list;
-  }
-  */
   
   public static JSONObject[] getJSONObjectArray(JSONObject json, String key) {
     return getJSONObjectArray(json, key, null);
@@ -123,5 +118,18 @@ public static class JSONObjectReader {
     return objects;
   }
   
+  
+  public static Boolean getBoolean(JSONObject json, String key) {
+    return getBoolean(json, key, false);
+  }
+  
+  public static Boolean getBoolean(JSONObject json, String key, Boolean fallback) {
+    int d = 0;
+    if (fallback) d = 1;  
+    int read = json.getInt(key, d);
+    if (read == 0) return false;
+    if (read == 1) return true;
+    return fallback;
+  }
   
 }
