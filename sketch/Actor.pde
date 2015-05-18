@@ -37,7 +37,13 @@ public class Actor extends CommanderObject {
   // Mechanical character attributes
   int[] skills;
   int luck;
-  //Aspects, etc, go here
+  //Aspects/Stunts/Consequences/Extras go here
+  //Flags
+  Boolean isPlayer;
+  Boolean isPlot;
+  Boolean isGenerated;
+  Boolean isDeceased;
+  
   
   //CommanderObject relationships
   Location location;
@@ -74,10 +80,18 @@ public class Actor extends CommanderObject {
     lName = "Doe";
     luck = 0;
     skills = new int[getDocumentSettings().numSkills];
+    isPlayer = false;
+    isPlot = false;
+    isGenerated = false;
+    isDeceased = false;
   } 
   
   private void randomise() {
     //Generate random vital stats for this Actor.
+    isGenerated = true;
+    isPlayer = false;
+    isPlot = false;
+    isDeceased = false;
     luck = 1;
     gender = floor(random(2));
     lName = getDocumentSettings().getRandomLastName();
@@ -139,6 +153,10 @@ public class Actor extends CommanderObject {
       s.setInt(i, skills[i]);
     }
     json.setJSONArray("skills", s);
+    json.setInt("isPlayer", isPlayer ? 1 : 0);
+    json.setInt("isPlot", isPlot ? 1 : 0);
+    json.setInt("isGenerated", isGenerated ? 1 : 0);
+    json.setInt("isDeceased", isDeceased ? 1 : 0);
     return json;
   }
   
@@ -151,6 +169,11 @@ public class Actor extends CommanderObject {
     skills = JSONObjectReader.getIntArray(json, "skills", skills);
     //relations
     locationID = json.getInt("locationID", -1);  //-1 = no location
+    isPlayer = JSONObjectReader.getBoolean(json, "isPlayer", false);
+    isPlot = JSONObjectReader.getBoolean(json, "isPlot", false);
+    isGenerated = JSONObjectReader.getBoolean(json, "isGenerated", false);
+    isDeceased = JSONObjectReader.getBoolean(json, "isDeceased", false);
+
   }
   
 

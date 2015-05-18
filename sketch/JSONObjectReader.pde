@@ -3,14 +3,18 @@ public static class JSONObjectReader {
   
   /*
   JSONObject functions to wrap
-  [x] getJSONArray()   Gets the JSONArray value associated with a key
-  [x] getJSONObject()  Gets the JSONObject value associated with a key
+  [x] getJSONArray()        Gets the JSONArray value associated with a key
+  [x] getJSONObject()       Gets the JSONObject value associated with a key
   
-  JSONArray functions to wrap
-  [x] getStringArray()      Gets the entire array as an array of Strings
-  [x] getIntArray()         Gets the entire array as array of ints
-  [x] getFloatArray()       <Unimplemented>
-  [x] getJSONObjectArray()  <Unimplemented>
+  
+  JSONArray functions to wrap (Note these are just called on JSONObjects and a key containing an array)
+  [x] getStringArray()      Gets an array at key as an array of Strings
+  [x] getIntArray()         Gets an array at key as array of ints
+  
+  New functions
+  [x] getFloatArray()       Gets an array at key as array of floats
+  [x] getJSONObjectArray()  Gets an array at key as array of JSONObjects
+  [x] getBoolean()          Gets a Boolean value associated with a key
   */
   
   public static JSONArray getJSONArray(JSONObject json, String key) {
@@ -114,5 +118,18 @@ public static class JSONObjectReader {
     return objects;
   }
   
+  
+  public static Boolean getBoolean(JSONObject json, String key) {
+    return getBoolean(json, key, false);
+  }
+  
+  public static Boolean getBoolean(JSONObject json, String key, Boolean fallback) {
+    int d = 0;
+    if (fallback) d = 1;  
+    int read = json.getInt(key, d);
+    if (read == 0) return false;
+    if (read == 1) return true;
+    return fallback;
+  }
   
 }
