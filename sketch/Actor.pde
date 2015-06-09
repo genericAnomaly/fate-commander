@@ -34,10 +34,17 @@ public class Actor extends CommanderObject {
   String fName;
   String lName;
   int gender;
+  ArrayList<NarrativeElement> aspectList;
+  ArrayList<NarrativeElement> stuntList;
+  ArrayList<NarrativeElement> consequenceList;
+  ArrayList<NarrativeElement> extraList;
+  ArrayList<NarrativeElement> noteList;
+
+
   // Mechanical character attributes
   int[] skills;
   int luck;
-  //Aspects/Stunts/Consequences/Extras go here
+  
   //Flags
   Boolean isPlayer;
   Boolean isPlot;
@@ -84,7 +91,22 @@ public class Actor extends CommanderObject {
     isPlot = false;
     isGenerated = false;
     isDeceased = false;
-  } 
+    initNarrativeElements();
+  }
+  
+  private void initNarrativeElements() {
+    //Reset the NarrativeElement ArrayLists associated with this Actor and load default values
+    aspectList = new ArrayList<NarrativeElement>(5);
+    aspectList.add(new NarrativeElement("High Concept", "Description", NarrativeElement.ELEMENT_TYPE_ASPECT));
+    aspectList.add(new NarrativeElement("Trouble", "Description", NarrativeElement.ELEMENT_TYPE_ASPECT));
+    aspectList.add(new NarrativeElement("Aspect 3", "Description", NarrativeElement.ELEMENT_TYPE_ASPECT));
+    aspectList.add(new NarrativeElement("Aspect 4", "Description", NarrativeElement.ELEMENT_TYPE_ASPECT));
+    aspectList.add(new NarrativeElement("Aspect 5", "Description", NarrativeElement.ELEMENT_TYPE_ASPECT));
+    stuntList = new ArrayList<NarrativeElement>();
+    consequenceList = new ArrayList<NarrativeElement>();
+    extraList = new ArrayList<NarrativeElement>();
+    noteList = new ArrayList<NarrativeElement>();
+  }
   
   private void randomise() {
     //Generate random vital stats for this Actor.
@@ -111,12 +133,26 @@ public class Actor extends CommanderObject {
     String s = "";
     s += "[A] " + fName + " " + lName + " (" + luck + ")\n"; 
     t = t + "  "; 
+    //Aspects
+    s += t + "Aspects:\n";
+    for (NarrativeElement e : aspectList) {
+      s += t + " " + e.name + "\n";
+    }
+    //Stunts
+    s += t + "Stunts:\n";
+    for (NarrativeElement e : stuntList) {
+      s += t + " " + e.name + "\n";
+    }
+    //TODO: have a loop or function handle all the NarrativeElement lists to avoid 5 sections of identical code
+    
+    //skills
+    s += t + "Skills:\n";
     int peak = 0;
     for (int i = 0; i < skills.length; i++) {
       if (skills[i] > peak) peak = skills[i];
     }
     for (int i = peak; i > 0; i--) {
-      s += t + "+" + i + " ";
+      s += t + " +" + i + " ";
       String delim = "";
       for (int j = 0; j < skills.length; j++) {
         if (skills[j] == i) {
