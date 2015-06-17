@@ -132,4 +132,22 @@ public static class JSONObjectReader {
     return fallback;
   }
   
+  
+  
+  
+  //Some day I /will/ figure this shit out
+//  public static <T> void getJSONableArray(JSONObject json, String key, ArrayList<? extends JSONable> array) {
+//  }
+  
+  public static JSONArray arrayListToJSONArray(ArrayList<? extends JSONable> list) {
+    JSONArray array = new JSONArray();
+    int i = 0;
+    for (JSONable e : list) {
+      array.setJSONObject(i, e.toJSON());
+      i++;
+    }
+    return array;
+  }
+  
+  
 }

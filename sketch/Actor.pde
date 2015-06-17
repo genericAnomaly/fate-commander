@@ -99,9 +99,6 @@ public class Actor extends CommanderObject {
     aspectList = new ArrayList<NarrativeElement>(5);
     aspectList.add(new NarrativeElement("High Concept", "Description", NarrativeElement.ELEMENT_TYPE_ASPECT));
     aspectList.add(new NarrativeElement("Trouble", "Description", NarrativeElement.ELEMENT_TYPE_ASPECT));
-    aspectList.add(new NarrativeElement("Aspect 3", "Description", NarrativeElement.ELEMENT_TYPE_ASPECT));
-    aspectList.add(new NarrativeElement("Aspect 4", "Description", NarrativeElement.ELEMENT_TYPE_ASPECT));
-    aspectList.add(new NarrativeElement("Aspect 5", "Description", NarrativeElement.ELEMENT_TYPE_ASPECT));
     stuntList = new ArrayList<NarrativeElement>();
     consequenceList = new ArrayList<NarrativeElement>();
     extraList = new ArrayList<NarrativeElement>();
@@ -193,6 +190,9 @@ public class Actor extends CommanderObject {
     json.setInt("isPlot", isPlot ? 1 : 0);
     json.setInt("isGenerated", isGenerated ? 1 : 0);
     json.setInt("isDeceased", isDeceased ? 1 : 0);
+    
+    json.setJSONArray("aspectList", JSONObjectReader.arrayListToJSONArray(aspectList));
+    
     return json;
   }
   
@@ -212,6 +212,17 @@ public class Actor extends CommanderObject {
 
   }
   
+
+
+
+  private ArrayList<NarrativeElement> getNEList (JSONArray array) {
+    //Convenience method; might get replaced if I can ever get my mind around generics and interfaces properly
+    ArrayList<NarrativeElement> list = new ArrayList<NarrativeElement>(array.size()); 
+    for (int i = 0; i < array.size(); i++) list.add(new NarrativeElement(array.getJSONObject(i)));
+    return list;
+  }
+  
+   
 
   
 }

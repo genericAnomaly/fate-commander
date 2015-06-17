@@ -101,6 +101,20 @@
       "isPlot": 0,
       "locationID": 1,
       "lName": "Bicknell",
+      "aspectList": [
+        {
+          "isDisabled": 0,
+          "description": "Description",
+          "name": "High Concept",
+          "type": 0
+        },
+        {
+          "isDisabled": 0,
+          "description": "Description",
+          "name": "Trouble",
+          "type": 0
+        }
+      ],
       "fName": "August"
     },
     {
@@ -133,6 +147,20 @@
       "isPlot": 0,
       "locationID": 0,
       "lName": "Schaeffer",
+      "aspectList": [
+        {
+          "isDisabled": 0,
+          "description": "Description",
+          "name": "High Concept",
+          "type": 0
+        },
+        {
+          "isDisabled": 0,
+          "description": "Description",
+          "name": "Trouble",
+          "type": 0
+        }
+      ],
       "fName": "Johnny"
     },
     {
@@ -165,6 +193,20 @@
       "isPlot": 0,
       "locationID": 0,
       "lName": "Palmer",
+      "aspectList": [
+        {
+          "isDisabled": 0,
+          "description": "Description",
+          "name": "High Concept",
+          "type": 0
+        },
+        {
+          "isDisabled": 0,
+          "description": "Description",
+          "name": "Trouble",
+          "type": 0
+        }
+      ],
       "fName": "Annika"
     },
     {
@@ -197,6 +239,20 @@
       "isPlot": 0,
       "locationID": 1,
       "lName": "Taggart",
+      "aspectList": [
+        {
+          "isDisabled": 0,
+          "description": "Description",
+          "name": "High Concept",
+          "type": 0
+        },
+        {
+          "isDisabled": 0,
+          "description": "Description",
+          "name": "Trouble",
+          "type": 0
+        }
+      ],
       "fName": "Quinn"
     }
   ]
