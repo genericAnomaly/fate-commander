@@ -135,10 +135,7 @@ public static class JSONObjectReader {
   
   
   
-  //Some day I /will/ figure this shit out
-//  public static <T> void getJSONableArray(JSONObject json, String key, ArrayList<? extends JSONable> array) {
-//  }
-  
+
   public static JSONArray arrayListToJSONArray(ArrayList<? extends JSONable> list) {
     JSONArray array = new JSONArray();
     int i = 0;
@@ -148,6 +145,16 @@ public static class JSONObjectReader {
     }
     return array;
   }
+  
+  /*
+  //ALMOST frickin' got it but OH WHOOPS NVM TYPE ERASURE FUCK
+  public static <T extends JSONable> ArrayList<T> readJSONArrayToArrayList(JSONArray array, ArrayList<T> list) {
+    for (int i = 0; i < array.size(); i++) {
+      JSONObject json = array.getJSONObject(i);
+      //list.add( new T(json) );
+    }
+    return list;
+  }*/
   
   
 }
