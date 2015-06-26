@@ -72,7 +72,6 @@
   ],
   "actorList": [
     {
-      "isPlayer": 0,
       "skills": [
         0,
         0,
@@ -93,111 +92,190 @@
         0,
         2
       ],
-      "id": 0,
+      "isPlayer": 0,
       "isGenerated": 1,
       "luck": 1,
-      "gender": 1,
-      "isDeceased": 0,
-      "isPlot": 0,
-      "locationID": 1,
       "lName": "Bicknell",
-      "fName": "August"
-    },
-    {
-      "isPlayer": 0,
-      "skills": [
-        1,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        3,
-        0,
-        2,
-        0,
-        2,
-        0,
-        0,
-        0,
-        0
-      ],
-      "id": 1,
-      "isGenerated": 1,
-      "luck": 1,
-      "gender": 1,
-      "isDeceased": 0,
-      "isPlot": 0,
-      "locationID": 0,
-      "lName": "Schaeffer",
-      "fName": "Johnny"
-    },
-    {
-      "isPlayer": 0,
-      "skills": [
-        2,
-        0,
-        0,
-        3,
-        1,
-        0,
-        0,
-        0,
-        2,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0
-      ],
-      "id": 2,
-      "isGenerated": 1,
-      "luck": 1,
-      "gender": 0,
-      "isDeceased": 0,
-      "isPlot": 0,
-      "locationID": 0,
-      "lName": "Palmer",
-      "fName": "Annika"
-    },
-    {
-      "isPlayer": 0,
-      "skills": [
-        1,
-        0,
-        0,
-        2,
-        0,
-        0,
-        0,
-        3,
-        1,
-        2,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "id": 3,
-      "isGenerated": 1,
-      "luck": 1,
-      "gender": 1,
-      "isDeceased": 0,
-      "isPlot": 0,
       "locationID": 1,
+      "extraList": [],
+      "fName": "August",
+      "id": 0,
+      "consequenceList": [],
+      "gender": 1,
+      "isPlot": 0,
+      "isDeceased": 0,
+      "stuntList": [],
+      "aspectList": [
+        {
+          "isDisabled": 0,
+          "description": "Description",
+          "name": "High Concept",
+          "type": 0
+        },
+        {
+          "isDisabled": 0,
+          "description": "Description",
+          "name": "Trouble",
+          "type": 0
+        }
+      ],
+      "noteList": []
+    },
+    {
+      "skills": [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        3,
+        0,
+        2,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0
+      ],
+      "isPlayer": 0,
+      "isGenerated": 1,
+      "luck": 1,
+      "lName": "Schaeffer",
+      "locationID": 0,
+      "extraList": [],
+      "fName": "Johnny",
+      "id": 1,
+      "consequenceList": [],
+      "gender": 1,
+      "isPlot": 0,
+      "isDeceased": 0,
+      "stuntList": [],
+      "aspectList": [
+        {
+          "isDisabled": 0,
+          "description": "Description",
+          "name": "High Concept",
+          "type": 0
+        },
+        {
+          "isDisabled": 0,
+          "description": "Description",
+          "name": "Trouble",
+          "type": 0
+        }
+      ],
+      "noteList": []
+    },
+    {
+      "skills": [
+        2,
+        0,
+        0,
+        3,
+        1,
+        0,
+        0,
+        0,
+        2,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      "isPlayer": 0,
+      "isGenerated": 1,
+      "luck": 1,
+      "lName": "Palmer",
+      "locationID": 0,
+      "extraList": [],
+      "fName": "Annika",
+      "id": 2,
+      "consequenceList": [],
+      "gender": 0,
+      "isPlot": 0,
+      "isDeceased": 0,
+      "stuntList": [],
+      "aspectList": [
+        {
+          "isDisabled": 0,
+          "description": "What do you mean, \"'new chief medical officer!?\"",
+          "name": "Yes I'm A Doctor",
+          "type": 0
+        },
+        {
+          "isDisabled": 0,
+          "description": "You've got the training and credentials, but you're not really used to treating patients with only two legs...",
+          "name": "Not That Kind Of Doctor",
+          "type": 0
+        },
+        {
+          "isDisabled": 0,
+          "description": "When things go terribly wrong, through no fault of your own, you tend to be in a position to affect the outcome of events, for good or for ill.",
+          "name": "The Right Place At The Wrong Time",
+          "type": 0
+        }
+      ],
+      "noteList": []
+    },
+    {
+      "skills": [
+        1,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        3,
+        1,
+        2,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "isPlayer": 0,
+      "isGenerated": 1,
+      "luck": 1,
       "lName": "Taggart",
-      "fName": "Quinn"
+      "locationID": 1,
+      "extraList": [],
+      "fName": "Quinn",
+      "id": 3,
+      "consequenceList": [],
+      "gender": 1,
+      "isPlot": 0,
+      "isDeceased": 0,
+      "stuntList": [],
+      "aspectList": [
+        {
+          "isDisabled": 0,
+          "description": "Description",
+          "name": "High Concept",
+          "type": 0
+        },
+        {
+          "isDisabled": 0,
+          "description": "Description",
+          "name": "Trouble",
+          "type": 0
+        }
+      ],
+      "noteList": []
     }
   ]
 }

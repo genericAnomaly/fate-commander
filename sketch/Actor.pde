@@ -34,10 +34,17 @@ public class Actor extends CommanderObject {
   String fName;
   String lName;
   int gender;
+  ArrayList<NarrativeElement> aspectList;
+  ArrayList<NarrativeElement> stuntList;
+  ArrayList<NarrativeElement> consequenceList;
+  ArrayList<NarrativeElement> extraList;
+  ArrayList<NarrativeElement> noteList;
+
+
   // Mechanical character attributes
   int[] skills;
   int luck;
-  //Aspects/Stunts/Consequences/Extras go here
+  
   //Flags
   Boolean isPlayer;
   Boolean isPlot;
@@ -84,7 +91,19 @@ public class Actor extends CommanderObject {
     isPlot = false;
     isGenerated = false;
     isDeceased = false;
-  } 
+    initNarrativeElements();
+  }
+  
+  private void initNarrativeElements() {
+    //Reset the NarrativeElement ArrayLists associated with this Actor and load default values
+    aspectList = new ArrayList<NarrativeElement>(5);
+    aspectList.add(new NarrativeElement("High Concept", "Description", NarrativeElement.ELEMENT_TYPE_ASPECT));
+    aspectList.add(new NarrativeElement("Trouble", "Description", NarrativeElement.ELEMENT_TYPE_ASPECT));
+    stuntList = new ArrayList<NarrativeElement>();
+    consequenceList = new ArrayList<NarrativeElement>();
+    extraList = new ArrayList<NarrativeElement>();
+    noteList = new ArrayList<NarrativeElement>();
+  }
   
   private void randomise() {
     //Generate random vital stats for this Actor.
@@ -111,12 +130,22 @@ public class Actor extends CommanderObject {
     String s = "";
     s += "[A] " + fName + " " + lName + " (" + luck + ")\n"; 
     t = t + "  "; 
+
+    //NarrativeElements
+    s += stringifyList("Aspect", aspectList, t);
+    s += stringifyList("Stunt", stuntList, t);
+    s += stringifyList("Consequence", consequenceList, t);
+    s += stringifyList("Extra", extraList, t);
+    s += stringifyList("Note", noteList, t);
+    
+    //Skills
+    s += t + "Skills:\n";
     int peak = 0;
     for (int i = 0; i < skills.length; i++) {
       if (skills[i] > peak) peak = skills[i];
     }
     for (int i = peak; i > 0; i--) {
-      s += t + "+" + i + " ";
+      s += t + " +" + i + " ";
       String delim = "";
       for (int j = 0; j < skills.length; j++) {
         if (skills[j] == i) {
@@ -128,6 +157,16 @@ public class Actor extends CommanderObject {
     }
     return s;
   }
+  
+  //TODO: consider genericising this method to apply to anything implementing a stringable interface
+  String stringifyList(String title, ArrayList<NarrativeElement> list, String t) {
+    String s = "";
+    if (list == null) return t + "No " + title + "s\n";
+    if (list.size() == 0) return t + "No " + title + "s\n";
+    s += t + title + "s:\n";
+    for (NarrativeElement e : list) s += t + " " + e.name + "\n";
+    return s;
+  } 
   
   String getName() {
     return fName + " " + lName;
@@ -157,6 +196,13 @@ public class Actor extends CommanderObject {
     json.setInt("isPlot", isPlot ? 1 : 0);
     json.setInt("isGenerated", isGenerated ? 1 : 0);
     json.setInt("isDeceased", isDeceased ? 1 : 0);
+    
+    json.setJSONArray("aspectList", JSONObjectReader.arrayListToJSONArray(aspectList));
+    json.setJSONArray("stuntList", JSONObjectReader.arrayListToJSONArray(stuntList));
+    json.setJSONArray("consequenceList", JSONObjectReader.arrayListToJSONArray(consequenceList));
+    json.setJSONArray("extraList", JSONObjectReader.arrayListToJSONArray(extraList));
+    json.setJSONArray("noteList", JSONObjectReader.arrayListToJSONArray(noteList));
+    
     return json;
   }
   
@@ -169,13 +215,32 @@ public class Actor extends CommanderObject {
     skills = JSONObjectReader.getIntArray(json, "skills", skills);
     //relations
     locationID = json.getInt("locationID", -1);  //-1 = no location
+    //flags
     isPlayer = JSONObjectReader.getBoolean(json, "isPlayer", false);
     isPlot = JSONObjectReader.getBoolean(json, "isPlot", false);
     isGenerated = JSONObjectReader.getBoolean(json, "isGenerated", false);
     isDeceased = JSONObjectReader.getBoolean(json, "isDeceased", false);
-
+    //NarrativeElements
+    aspectList = getNEList( JSONObjectReader.getJSONArray(json, "aspectList", null) );
+    stuntList = getNEList( JSONObjectReader.getJSONArray(json, "stuntList", null) );
+    consequenceList = getNEList( JSONObjectReader.getJSONArray(json, "consequenceList", null) );
+    extraList = getNEList( JSONObjectReader.getJSONArray(json, "extraList", null) );
+    noteList = getNEList( JSONObjectReader.getJSONArray(json, "noteList", null) );
   }
   
+  //TODO: Find a better home for this as a helper function
+  ArrayList<NarrativeElement> getNEList(JSONArray array) {
+    ArrayList<NarrativeElement> list = new ArrayList<NarrativeElement>();
+    if (array == null) return list;
+    for (int i = 0; i < array.size(); i++) {
+      JSONObject json = array.getJSONObject(i);
+      list.add( new NarrativeElement(json) );
+    }
+    return list;
+  }
+
+
+   
 
   
 }
