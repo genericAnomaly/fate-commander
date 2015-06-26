@@ -1,3 +1,5 @@
+import java.util.Set;
+
 public static class JSONObjectReader {
   //Static methods for safely reading values from a JSONObject
   
@@ -23,6 +25,7 @@ public static class JSONObjectReader {
   
   public static JSONArray getJSONArray(JSONObject json, String key, JSONArray fallback) {
     JSONArray array;
+    if (!keyPresent(json, key) ) return fallback;
     try {
       array = json.getJSONArray(key);
     } catch (Exception e) {
@@ -33,13 +36,13 @@ public static class JSONObjectReader {
     return array;
   }
   
-  
   public static JSONObject getJSONObject(JSONObject json, String key) {
     return getJSONObject(json, key, null);
   }
   
   public static JSONObject getJSONObject(JSONObject json, String key, JSONObject fallback) {
     JSONObject object;
+    if (!keyPresent(json, key) ) return fallback;
     try {
       object = json.getJSONObject(key);
     } catch (Exception e) {
@@ -156,5 +159,20 @@ public static class JSONObjectReader {
     return list;
   }*/
   
+  
+  
+  public static String[] getKeyArray(JSONObject json) {
+    Set keys = json.keys();
+    String[] array = new String[1];
+    array = (String[]) keys.toArray(array);
+    return array;
+  }
+  
+  public static Boolean keyPresent(JSONObject json, String key) {
+    if ( json.keys().contains(key) ) return true;
+    println("[Notice] Expected key " + key + " was not found!");
+    return false;
+  }
+  //TODO: Update ALL the functions in here that use try-catch blocks to deal with potential missing keys to check with keyPresent first
   
 }

@@ -130,19 +130,15 @@ public class Actor extends CommanderObject {
     String s = "";
     s += "[A] " + fName + " " + lName + " (" + luck + ")\n"; 
     t = t + "  "; 
-    //Aspects
-    s += t + "Aspects:\n";
-    for (NarrativeElement e : aspectList) {
-      s += t + " " + e.name + "\n";
-    }
-    //Stunts
-    s += t + "Stunts:\n";
-    for (NarrativeElement e : stuntList) {
-      s += t + " " + e.name + "\n";
-    }
-    //TODO: have a loop or function handle all the NarrativeElement lists to avoid 5 sections of identical code
+
+    //NarrativeElements
+    s += stringifyList("Aspect", aspectList, t);
+    s += stringifyList("Stunt", stuntList, t);
+    s += stringifyList("Consequence", consequenceList, t);
+    s += stringifyList("Extra", extraList, t);
+    s += stringifyList("Note", noteList, t);
     
-    //skills
+    //Skills
     s += t + "Skills:\n";
     int peak = 0;
     for (int i = 0; i < skills.length; i++) {
@@ -161,6 +157,16 @@ public class Actor extends CommanderObject {
     }
     return s;
   }
+  
+  //TODO: consider genericising this method to apply to anything implementing a stringable interface
+  String stringifyList(String title, ArrayList<NarrativeElement> list, String t) {
+    String s = "";
+    if (list == null) return t + "No " + title + "s\n";
+    if (list.size() == 0) return t + "No " + title + "s\n";
+    s += t + title + "s:\n";
+    for (NarrativeElement e : list) s += t + " " + e.name + "\n";
+    return s;
+  } 
   
   String getName() {
     return fName + " " + lName;
@@ -192,6 +198,10 @@ public class Actor extends CommanderObject {
     json.setInt("isDeceased", isDeceased ? 1 : 0);
     
     json.setJSONArray("aspectList", JSONObjectReader.arrayListToJSONArray(aspectList));
+    json.setJSONArray("stuntList", JSONObjectReader.arrayListToJSONArray(stuntList));
+    json.setJSONArray("consequenceList", JSONObjectReader.arrayListToJSONArray(consequenceList));
+    json.setJSONArray("extraList", JSONObjectReader.arrayListToJSONArray(extraList));
+    json.setJSONArray("noteList", JSONObjectReader.arrayListToJSONArray(noteList));
     
     return json;
   }
@@ -205,23 +215,31 @@ public class Actor extends CommanderObject {
     skills = JSONObjectReader.getIntArray(json, "skills", skills);
     //relations
     locationID = json.getInt("locationID", -1);  //-1 = no location
+    //flags
     isPlayer = JSONObjectReader.getBoolean(json, "isPlayer", false);
     isPlot = JSONObjectReader.getBoolean(json, "isPlot", false);
     isGenerated = JSONObjectReader.getBoolean(json, "isGenerated", false);
     isDeceased = JSONObjectReader.getBoolean(json, "isDeceased", false);
-
+    //NarrativeElements
+    aspectList = getNEList( JSONObjectReader.getJSONArray(json, "aspectList", null) );
+    stuntList = getNEList( JSONObjectReader.getJSONArray(json, "stuntList", null) );
+    consequenceList = getNEList( JSONObjectReader.getJSONArray(json, "consequenceList", null) );
+    extraList = getNEList( JSONObjectReader.getJSONArray(json, "extraList", null) );
+    noteList = getNEList( JSONObjectReader.getJSONArray(json, "noteList", null) );
   }
   
-
-
-
-  private ArrayList<NarrativeElement> getNEList (JSONArray array) {
-    //Convenience method; might get replaced if I can ever get my mind around generics and interfaces properly
-    ArrayList<NarrativeElement> list = new ArrayList<NarrativeElement>(array.size()); 
-    for (int i = 0; i < array.size(); i++) list.add(new NarrativeElement(array.getJSONObject(i)));
+  //TODO: Find a better home for this as a helper function
+  ArrayList<NarrativeElement> getNEList(JSONArray array) {
+    ArrayList<NarrativeElement> list = new ArrayList<NarrativeElement>();
+    if (array == null) return list;
+    for (int i = 0; i < array.size(); i++) {
+      JSONObject json = array.getJSONObject(i);
+      list.add( new NarrativeElement(json) );
+    }
     return list;
   }
-  
+
+
    
 
   
