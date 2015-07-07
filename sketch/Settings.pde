@@ -6,6 +6,10 @@ public class Settings {
   int numSkills;
   int skillPeak;
   
+  //Stress
+  String[] stressNames;
+  int[] stressSkills;
+  
   //Names
   String namesLast[];
   String namesFemale[];
@@ -32,6 +36,7 @@ public class Settings {
     namesFemale = loadStrings("first_female.txt");
     namesMale = loadStrings("first_male.txt");
     setDefaultSkills();
+    setDefaultStress();
   }
   
 
@@ -125,6 +130,14 @@ public class Settings {
     for (int i = 0; i < numSkills; i++) skillWeight[i] = 1;
   }
   
+  void setDefaultStress() {
+    stressNames = new String[2];
+    stressSkills = new int[2];
+    stressNames[0] = "Physical";
+    stressNames[1] = "Mental";
+    stressSkills[0] = Actor.SKILL_PHYSIQUE;
+    stressSkills[1] = Actor.SKILL_WILL;
+  }
   
   
   String toString() {
@@ -165,3 +178,13 @@ public class Settings {
   }
   
 }
+
+
+/*
+//NB: Consider replacing all these loosely associated arrays in Settings with specialised struct-y classes in the long term, something like this
+public class StressDefinition implements JSONable {
+  int skill;
+  String name;
+}
+*/
+
