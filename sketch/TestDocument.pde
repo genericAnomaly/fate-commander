@@ -56,6 +56,27 @@ public class TestDocument extends CommanderDocument {
     saveJSONObject(json, "save/testsave2.json");
   }
   
+  
+  void testStress() {
+    Actor test = actorList.get(0);
+    StressPacket packet = new StressPacket(2, 0, "Hit in the face by a unit test!");
+    test.addStress(packet);
+    println(test);
+    
+    test.autoResolveStressQueues();
+    println(test);
+    
+    packet = new StressPacket(1, 1, "Hit in the brain by a unit test!");
+    test.addStress(packet);
+    packet = new StressPacket(3, 1, "Hit in the brain by a unit test!");
+    test.addStress(packet);
+    test.addStress(packet);
+    println(test);
+    
+    test.autoResolveStressQueues();
+    println(test);
+    
+  }
 
   
 }

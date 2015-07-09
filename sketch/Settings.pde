@@ -9,6 +9,7 @@ public class Settings {
   //Stress
   String[] stressNames;
   int[] stressSkills;
+  int numStressTracks;
   
   //Names
   String namesLast[];
@@ -137,6 +138,7 @@ public class Settings {
     stressNames[1] = "Mental";
     stressSkills[0] = Actor.SKILL_PHYSIQUE;
     stressSkills[1] = Actor.SKILL_WILL;
+    numStressTracks = 2;
   }
   
   
