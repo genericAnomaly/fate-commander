@@ -94,15 +94,16 @@ public class StressTrack implements JSONable {
     }
   }
   
+  
+  //TODO: potentially retire this method, I'd rather have the Actor keep track of failed absorbtions than the weird bubble-up model here
   public void bestResolution(StressPacket packet) {
     //Find the smallest box it'll fit then keep going up until it's resolved. If it can't be, pass it up to the Consequence handler or whatever
-    //TODO: Maybe include document settings for how much stress each box can take like STRESS_TRACK _LINEAR, _DOUBLE_LINEAR, _FIBONACCI, _EXPONENTIAL
-    //TODO: Can you split stress between boxes, i.e. 5 goes in a 1 and 4 box? Eck this whole thing could use more work, handling all this mechanical flexibility is a mega pain.
     Boolean resolved = false;
     for (int i = packet.value-1; i < size; i++) {
       if (!track[i]) {
         track[i] = true;
         resolved = true;
+        println("[Stress] Absorbing " + packet + " in box " + i);
         break;
       }
     }
@@ -151,6 +152,40 @@ public class StressTrack implements JSONable {
     return s;
   }
   
+  
+  
+  
+  public Boolean offerStress(StressPacket packet) {
+    //Attempt to absord the offeredStress into this stress track.
+    //Returns true if the stress could be absorbed, false otherwise.
+    
+    //TODO: Should this scream about StressPackets of the wrong type?
+    
+    //TODO: Document level settings defining stress absorbtion
+    //Like, a setting for if stress can be split between boxes
+    //And different configurations like STRESS_TRACK _LINEAR, _DOUBLE_LINEAR, _FIBONACCI, _EXPONENTIAL
+    //Let's just use linear for now and worry about different dissipation models later
+    
+    //edge case: no damage, always absorbed so
+    if (packet.value <= 0) return true;
+    
+    //Try each box from small to large
+    for (int i = packet.value-1; i < size; i++) {
+      if (!track[i]) {
+        track[i] = true;
+        println("[Stress] Successfully absorbing " + packet + " in box " + i);
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  
+  
+  
+  
+  
+  
 }
 
 
@@ -166,7 +201,7 @@ public class StressPacket {
   }
   
   public String toString() {
-    return "[StressPacket] (type/value/description) = (" + type + "/" + value + "/" + description + ")";
+    return "[StressPacket] (" + type + "/" + value + "/" + description + ")";
   }
   
 }

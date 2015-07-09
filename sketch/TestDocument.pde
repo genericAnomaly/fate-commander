@@ -59,22 +59,25 @@ public class TestDocument extends CommanderDocument {
   
   void testStress() {
     Actor test = actorList.get(0);
-    StressPacket packet = new StressPacket(2, 0, "Hit in the face by a unit test!");
+    StressPacket packet = new StressPacket(2, 0, "Hit in the guts by a unit test!");
     test.addStress(packet);
-    println(test);
+    print(test.getStress());
     
-    test.autoResolveStressQueues();
-    println(test);
+    test.autoResolveStressQueue();
+    print(test.getStress());
     
-    packet = new StressPacket(1, 1, "Hit in the brain by a unit test!");
+    packet = new StressPacket(1, 1, "Hit in the emotional guts by a unit test!");
     test.addStress(packet);
-    packet = new StressPacket(3, 1, "Hit in the brain by a unit test!");
+    packet = new StressPacket(3, 1, "Hit in the emotional guts by a unit test!");
     test.addStress(packet);
+    packet = new StressPacket(4, 1, "Hit in the emotional guts by a unit test!");
     test.addStress(packet);
-    println(test);
+    print(test.getStress());
     
-    test.autoResolveStressQueues();
-    println(test);
+    test.autoResolveStressQueue();
+    print(test.getStress());
+    
+    //TODO: Change to a SINGLE StressPacket queue per Actor so resolution occurs in correct order
     
   }
 

@@ -44,6 +44,7 @@ public class Actor extends CommanderObject {
   // Mechanical character attributes
   int[] skills;
   StressTrack[] stressTracks;
+  ArrayList<StressPacket> stressQueue;
   int luck;
   
   //Flags
@@ -108,6 +109,7 @@ public class Actor extends CommanderObject {
   }
   
   private void initStressTracks() {
+    stressQueue = new ArrayList<StressPacket>();
     stressTracks = new StressTrack[getDocumentSettings().numStressTracks];
     for (int i = 0; i < stressTracks.length; i++) {
       stressTracks[i] = new StressTrack(this, i);
@@ -196,6 +198,11 @@ public class Actor extends CommanderObject {
     return fName + " " + lName;
   }
   
+  String getStress() {
+    String s = getName() + "'s Stress\n";
+    for (StressTrack track : stressTracks) s += " " + track + "\n";
+    return s;
+  }
   
   // JSON save/load
   //================================================================
@@ -227,6 +234,8 @@ public class Actor extends CommanderObject {
     json.setJSONArray("extraList", JSONObjectReader.arrayListToJSONArray(extraList));
     json.setJSONArray("noteList", JSONObjectReader.arrayListToJSONArray(noteList));
     
+    //TODO: Serialise stressTracks and stressQueue
+    
     return json;
   }
   
@@ -253,6 +262,9 @@ public class Actor extends CommanderObject {
     
     //TODO: Load stress tracks from json instead of just generating them
     for (StressTrack track : stressTracks) track.regenerate();
+    
+    //TODO: Load stressQueue
+    //stressQueue = deserialise it
   }
   
   //TODO: Find a better home for this as a helper function
@@ -275,14 +287,23 @@ public class Actor extends CommanderObject {
   //================================================================
   public void addStress(int amount, int type, String description) {
     StressPacket packet = new StressPacket(amount, type, description);
-    stressTracks[type].addStress(packet);
+    addStress(packet);
   }
   public void addStress(StressPacket packet) {
-    stressTracks[packet.type].addStress(packet);
+    stressQueue.add(packet);
   }
-  public void autoResolveStressQueues() {
+  public void autoResolveStressQueue() {
     //Automatically resolve all queued stress
-    for (StressTrack track : stressTracks) track.resolveQueue();
+    while ( !stressQueue.isEmpty() ) {
+      StressPacket packet = stressQueue.get(0);
+      if ( !stressTracks[packet.type].offerStress(packet) ) {
+        //TODO:
+        println("[Stress] " + getName() + " cannot absorb " + packet + ", forwarding it to Consequences");
+        println("[TODO] Implement Consequence handling.");
+      }
+      stressQueue.remove(packet);
+    }
+    
   }
   
 
