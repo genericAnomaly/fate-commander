@@ -56,6 +56,11 @@ public class TestDocument extends CommanderDocument {
     saveJSONObject(json, "save/testsave2.json");
   }
   
+  void drySave() {
+    JSONObject json = toJSON();
+    println(json);
+  }
+  
   
   void testStress() {
     Actor test = actorList.get(0);

@@ -11,7 +11,6 @@ public class StressTrack implements JSONable {
   //Actor parent;
   
   //State info
-  int size;
   Boolean[] track;
   
 
@@ -22,7 +21,7 @@ public class StressTrack implements JSONable {
   
   public StressTrack (JSONObject json) {
     init();
-    //loadJSON(json);
+    loadJSON(json);
   }
   
   
@@ -35,17 +34,15 @@ public class StressTrack implements JSONable {
   
   private void resize(int newSize) {
     Boolean[] newTrack = new Boolean[newSize];
-    for (int i = 0; i < newSize; i++) newTrack[i] = false;
+    for (int i = 0; i < newTrack.length; i++) newTrack[i] = false;
     int copy = track.length;
-    if (newSize < copy) copy = newSize;
+    if (newTrack.length < copy) copy = newTrack.length;
     for (int i = 0; i < copy; i++) newTrack[i] = track[i];
     track = newTrack;
-    size = newSize; 
   }
   
   
   void loadJSON(JSONObject json) {
-    size = json.getInt("size", 2); //Technically we shouldn't even be bothering with size, just use track.length and if we must a size() method that returns track.length :\
     int[] loading = JSONObjectReader.getIntArray(json, "track", null);
     if (loading == null) return; //LT Todo: alert the user that their save's janked
     track = new Boolean[loading.length];
@@ -57,7 +54,6 @@ public class StressTrack implements JSONable {
   
   JSONObject toJSON() {
     JSONObject json = new JSONObject();
-    json.setInt("size", size);
     JSONArray array = new JSONArray();
     for (int i=0; i<track.length; i++) array.setInt(i, track[i] ? 1 : 0 );
     json.setJSONArray("track", array);
@@ -83,6 +79,9 @@ public class StressTrack implements JSONable {
     return s;
   }
   
+  public int size() {
+    return track.length;
+  }
   
   
   
@@ -102,7 +101,7 @@ public class StressTrack implements JSONable {
     if (packet.value <= 0) return true;
     
     //Try each box from small to large
-    for (int i = packet.value-1; i < size; i++) {
+    for (int i = packet.value-1; i < track.length; i++) {
       if (!track[i]) {
         track[i] = true;
         println("[Stress] Successfully absorbing " + packet + " in box " + i);

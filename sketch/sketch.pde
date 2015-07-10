@@ -18,6 +18,9 @@ void setup() {
   println(testDocument);
   //testDocument.testSave();
   testDocument.testStress();
+  
+  testDocument.drySave();
+  
 }
 
 
