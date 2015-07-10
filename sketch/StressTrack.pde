@@ -1,16 +1,6 @@
-//import java.util.concurrent.LinkedBlockingQueue;
-
 public class StressTrack implements JSONable {
   //Consider making this and NarrativeElement into internal classes of Actor?
-  
-  //StressTracks will be generated in Actor.init. Changes to the stress tracks in Settings (well, any changes in Settings really) will need to bubble out to correct affected values in the Document's CommanderObjects.
-  //Regeneration required when Actor's skills change
-  
-  //Meta info
-  int type;  //The name of the stress track and associated skill should always be pulled from document.settings or whatever
-  //Actor parent;
-  
-  //State info
+
   Boolean[] track;
   
 
@@ -24,15 +14,12 @@ public class StressTrack implements JSONable {
     loadJSON(json);
   }
   
-  
   private void init() {
     track = new Boolean[2];
     for (int i = 0; i < track.length; i++) track[i] = false;
   }
   
-  
-  
-  private void resize(int newSize) {
+  public void resize(int newSize) {
     Boolean[] newTrack = new Boolean[newSize];
     for (int i = 0; i < newTrack.length; i++) newTrack[i] = false;
     int copy = track.length;
@@ -40,7 +27,6 @@ public class StressTrack implements JSONable {
     for (int i = 0; i < copy; i++) newTrack[i] = track[i];
     track = newTrack;
   }
-  
   
   void loadJSON(JSONObject json) {
     int[] loading = JSONObjectReader.getIntArray(json, "track", null);
@@ -59,9 +45,6 @@ public class StressTrack implements JSONable {
     json.setJSONArray("track", array);
     return json;
   }
-  
-
-  
   
   public void reset() {
     //Clear the stress track

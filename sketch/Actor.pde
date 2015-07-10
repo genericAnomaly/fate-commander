@@ -261,8 +261,9 @@ public class Actor extends CommanderObject {
     json.setJSONArray("extraList", JSONObjectReader.arrayListToJSONArray(extraList));
     json.setJSONArray("noteList", JSONObjectReader.arrayListToJSONArray(noteList));
     
-    //TODO: Serialise stressTracks and stressQueue
+    
     json.setJSONArray("stressTracks", JSONObjectReader.arrayToJSONArray(stressTracks));
+    //TODO: Serialise stressQueue
     
     return json;
   }
