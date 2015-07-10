@@ -109,21 +109,47 @@ public class Actor extends CommanderObject {
   }
   
   private void initStressTracks() {
+    print("[DEBUG] initStressTracks() for " + getName() + ": ");
     stressQueue = new ArrayList<StressPacket>();
     stressTracks = new StressTrack[getDocumentSettings().numStressTracks];
     for (int i = 0; i < stressTracks.length; i++) {
-      stressTracks[i] = new StressTrack(this, i);
+      stressTracks[i] = new StressTrack( getStressTrackSize(i) );
+      print("Track " + i + " (" + getStressTrackName(i) + ") length " + getStressTrackSize(i) + " ");
     }
+    println();
   }
   
+  /*
   private void loadStressTracks(JSONArray json) {
     //TODO: actually implement this
     stressTracks = new StressTrack[getDocumentSettings().numStressTracks]; // Base this on length of array maybe to avoid potential exceptions from json meddling?
     for (int i = 0; i < stressTracks.length; i++) {
       //TODO: Get the relevant JSON
-      stressTracks[i] = new StressTrack(this, i);
+      stressTracks[i] = new StressTrack(2);
     }
+    
+    //TODO: sort out the json version
+    initStressTracks();
   }
+  */
+  
+  
+  private String getStressTrackName(int stressType) {
+    return getDocumentSettings().stressNames[stressType];
+  }
+  private int getStressTrackSkillIndex(int stressType) {
+    return getDocumentSettings().stressSkills[stressType];
+  }
+  private int getStressTrackSize(int stressType) {
+    //LT ToDo: Get info from Settings object for custom StressTrack sizes
+    //TODO: Should this maybe go in the StressTrack class but as a static method?
+    int skillValue = skills[ getStressTrackSkillIndex(stressType) ];
+    int trackSize = 2;
+    if (skillValue > 0) trackSize = 3;
+    if (skillValue > 2) trackSize = 4;
+    return trackSize;
+  }
+  
   
   
   private void randomise() {
@@ -137,7 +163,8 @@ public class Actor extends CommanderObject {
     lName = getDocumentSettings().getRandomLastName();
     fName = getDocumentSettings().getRandomFirstName(gender);
     skills = getDocumentSettings().getRandomSkillPyramid();
-    for (StressTrack track : stressTracks) track.regenerate();
+    //for (StressTrack track : stressTracks) track.regenerate();
+    initStressTracks();
   }
   
   
@@ -162,7 +189,7 @@ public class Actor extends CommanderObject {
     
     //Stress
     s+= t + "Stress\n";
-    for (StressTrack track : stressTracks) s += t + " " + track + "\n";
+    for (int i = 0; i < stressTracks.length; i++) s += t + " " + getDocumentSettings().stressNames[i] + stressTracks[i] + "\n";
     
     //Skills
     s += t + "Skills:\n";
@@ -261,7 +288,8 @@ public class Actor extends CommanderObject {
     noteList = getNEList( JSONObjectReader.getJSONArray(json, "noteList", null) );
     
     //TODO: Load stress tracks from json instead of just generating them
-    for (StressTrack track : stressTracks) track.regenerate();
+    //for (StressTrack track : stressTracks) track.regenerate();
+    initStressTracks();
     
     //TODO: Load stressQueue
     //stressQueue = deserialise it
