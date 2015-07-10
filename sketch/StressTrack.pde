@@ -14,81 +14,45 @@ public class StressTrack implements JSONable {
   int size;
   Boolean[] track;
   
-  //ArrayList<StressPacket> incoming;
-  
-  
-  /*
-  //Referenced info (pulled from higher up in the document)
-  //These should be saved to JSON, but the pulled values should supercede the saved ones. I have a feeling altering settings in an already populated document will need a lot of special handling and potential structural changes...
-  //Remember not to worry to hard about keeping the stress tracks persistent; if something does go horribly wrong they can be regenerated easily, and if the user is changing around skills and stuff midgame for some reason it is probably not mid-scene and all tracks are probably empty
-  int skillIndex;
-  int skillValue;
-  String name;
-  */
-  
-  
-  /*
-  public StressTrack (Actor p, int t) {
-    //Initialises a new BLANK stress track.
-    parent = p;
-    type = t;
-    
-    init();    
-  }
-  
-  public StressTrack (Actor p, JSONObject json) {
-    //TODO
-    parent = p;
-    type = json.getInt("type", 0);  //TODO: scream if the key is missing
-    
-    init();
-    
-    //TODO: read in JSON data
-    
-  }
-  */
-  
-  /*
-  public void regenerate() {
-    //(Re)builds the stress track, preserving stress if it exists
-    skillValue = parent.skills[skillIndex];  //LTToDo: Should probably add accessor methods to Actor to avoid potential oob exceptions
-    size = 2;
-    if (skillValue > 0) size = 3;  //LongTermToDo: options for setting base track size and when it grows?
-    if (skillValue > 2) size = 4;
-    Boolean[] newTrack = new Boolean[size];
-    for (int i = 0; i < size; i++) newTrack[i] = false;
-    if (track != null) for (int i = 0; i < track.length; i++) newTrack[i] = track[i];
-    track = newTrack;
-  }
-  */
-  
-  /*
-  private void init() {
-    //Precondition: parent and type must be populated!
-    incoming = new ArrayList<StressPacket>();
-    name = parent.getDocumentSettings().stressNames[type];
-    skillIndex = parent.getDocumentSettings().stressSkills[type];
-    regenerate();
-  }
-  */
-  
-  
-  public StressTrack(int s) {
-    size = s;
-    //LT ToDo: Constrain size based on min and max track sizes, possibly specified in Settings
-    init();
-  }
-  
-  private void init() {
-    track = new Boolean[size];
-    for (int i = 0; i < size; i++) track[i] = false;
-  }
-  
 
+  public StressTrack(int s) {
+    init();
+    resize(s);
+  }
   
-  public void reset() {
-    //Clear the stress track and queue without resolving the queue
-    //TODO
+  public StressTrack (JSONObject json) {
+    init();
+    //loadJSON(json);
+  }
+  
+  
+  private void init() {
+    track = new Boolean[2];
+    for (int i = 0; i < track.length; i++) track[i] = false;
+  }
+  
+  
+  
+  private void resize(int newSize) {
+    Boolean[] newTrack = new Boolean[newSize];
+    for (int i = 0; i < newSize; i++) newTrack[i] = false;
+    int copy = track.length;
+    if (newSize < copy) copy = newSize;
+    for (int i = 0; i < copy; i++) newTrack[i] = track[i];
+    track = newTrack;
+    size = newSize; 
+  }
+  
+  
+  void loadJSON(JSONObject json) {
+    size = json.getInt("size", 2); //Technically we shouldn't even be bothering with size, just use track.length and if we must a size() method that returns track.length :\
+    int[] loading = JSONObjectReader.getIntArray(json, "track", null);
+    if (loading == null) return; //LT Todo: alert the user that their save's janked
+    track = new Boolean[loading.length];
+    for (int i = 0; i < loading.length; i++) {
+      track[i] = false;
+      if (loading[i] == 1) track[i] = true;
+    }
   }
   
   JSONObject toJSON() {
@@ -100,21 +64,22 @@ public class StressTrack implements JSONable {
     return json;
   }
   
-  void loadJSON(JSONObject json) {
-    //TODO
+
+  
+  
+  public void reset() {
+    //Clear the stress track
+    //LT ToDo: Mention this to the logger
+    for (int i = 0; i < track.length; i++) track[i] = false;
   }
-  
-  
-  
   
   public String toString() {
     String s = "[StressTrack] => ";
-    for (int i = 0; i < size; i ++) {
+    for (int i = 0; i < track.length; i ++) {
       s += "[";
       s += track[i] ? "X" : " ";
       s += "]";
     }
-    //if (!incoming.isEmpty()) s += "  (" + incoming.size() + " Unresolved stress packet(s) in queue!)";
     return s;
   }
   
