@@ -43,6 +43,8 @@ public class Actor extends CommanderObject {
 
   // Mechanical character attributes
   int[] skills;
+  StressTrack[] stressTracks;
+  ArrayList<StressPacket> stressQueue;
   int luck;
   
   //Flags
@@ -92,6 +94,7 @@ public class Actor extends CommanderObject {
     isGenerated = false;
     isDeceased = false;
     initNarrativeElements();
+    initStressTracks();
   }
   
   private void initNarrativeElements() {
@@ -105,6 +108,50 @@ public class Actor extends CommanderObject {
     noteList = new ArrayList<NarrativeElement>();
   }
   
+  private void initStressTracks() {
+    print("[DEBUG] initStressTracks() for " + getName() + ": ");
+    stressQueue = new ArrayList<StressPacket>();
+    stressTracks = new StressTrack[getDocumentSettings().numStressTracks];
+    for (int i = 0; i < stressTracks.length; i++) {
+      stressTracks[i] = new StressTrack( getStressTrackSize(i) );
+      print("Track " + i + " (" + getStressTrackName(i) + ") length " + getStressTrackSize(i) + " ");
+    }
+    println();
+  }
+  
+  /*
+  private void loadStressTracks(JSONArray json) {
+    //TODO: actually implement this
+    stressTracks = new StressTrack[getDocumentSettings().numStressTracks]; // Base this on length of array maybe to avoid potential exceptions from json meddling?
+    for (int i = 0; i < stressTracks.length; i++) {
+      //TODO: Get the relevant JSON
+      stressTracks[i] = new StressTrack(2);
+    }
+    
+    //TODO: sort out the json version
+    initStressTracks();
+  }
+  */
+  
+  
+  private String getStressTrackName(int stressType) {
+    return getDocumentSettings().stressNames[stressType];
+  }
+  private int getStressTrackSkillIndex(int stressType) {
+    return getDocumentSettings().stressSkills[stressType];
+  }
+  private int getStressTrackSize(int stressType) {
+    //LT ToDo: Get info from Settings object for custom StressTrack sizes
+    //TODO: Should this maybe go in the StressTrack class but as a static method?
+    int skillValue = skills[ getStressTrackSkillIndex(stressType) ];
+    int trackSize = 2;
+    if (skillValue > 0) trackSize = 3;
+    if (skillValue > 2) trackSize = 4;
+    return trackSize;
+  }
+  
+  
+  
   private void randomise() {
     //Generate random vital stats for this Actor.
     isGenerated = true;
@@ -116,6 +163,8 @@ public class Actor extends CommanderObject {
     lName = getDocumentSettings().getRandomLastName();
     fName = getDocumentSettings().getRandomFirstName(gender);
     skills = getDocumentSettings().getRandomSkillPyramid();
+    //for (StressTrack track : stressTracks) track.regenerate();
+    initStressTracks();
   }
   
   
@@ -138,6 +187,10 @@ public class Actor extends CommanderObject {
     s += stringifyList("Extra", extraList, t);
     s += stringifyList("Note", noteList, t);
     
+    //Stress
+    s+= t + "Stress\n";
+    for (int i = 0; i < stressTracks.length; i++) s += t + " " + getDocumentSettings().stressNames[i] + stressTracks[i] + "\n";
+    
     //Skills
     s += t + "Skills:\n";
     int peak = 0;
@@ -158,7 +211,7 @@ public class Actor extends CommanderObject {
     return s;
   }
   
-  //TODO: consider genericising this method to apply to anything implementing a stringable interface
+  //TODO: consider genericising this method to apply to anything implementing a recursively stringable interface
   String stringifyList(String title, ArrayList<NarrativeElement> list, String t) {
     String s = "";
     if (list == null) return t + "No " + title + "s\n";
@@ -172,6 +225,11 @@ public class Actor extends CommanderObject {
     return fName + " " + lName;
   }
   
+  String getStress() {
+    String s = getName() + "'s Stress\n";
+    for (StressTrack track : stressTracks) s += " " + track + "\n";
+    return s;
+  }
   
   // JSON save/load
   //================================================================
@@ -203,6 +261,10 @@ public class Actor extends CommanderObject {
     json.setJSONArray("extraList", JSONObjectReader.arrayListToJSONArray(extraList));
     json.setJSONArray("noteList", JSONObjectReader.arrayListToJSONArray(noteList));
     
+    
+    json.setJSONArray("stressTracks", JSONObjectReader.arrayToJSONArray(stressTracks));
+    json.setJSONArray("stressQueue", JSONObjectReader.arrayListToJSONArray(stressQueue));
+    
     return json;
   }
   
@@ -226,6 +288,10 @@ public class Actor extends CommanderObject {
     consequenceList = getNEList( JSONObjectReader.getJSONArray(json, "consequenceList", null) );
     extraList = getNEList( JSONObjectReader.getJSONArray(json, "extraList", null) );
     noteList = getNEList( JSONObjectReader.getJSONArray(json, "noteList", null) );
+
+    //TODO: Switch these all over to the generic function in the next branch    
+    stressTracks = getStressTracks( JSONObjectReader.getJSONArray(json, "stressTracks", null) );
+    stressQueue = getStressPacketQueue( JSONObjectReader.getJSONArray(json, "stressQueue", null) );
   }
   
   //TODO: Find a better home for this as a helper function
@@ -238,9 +304,57 @@ public class Actor extends CommanderObject {
     }
     return list;
   }
-
-
-   
-
   
+  //LT ToDo: Don't get hung up on this 'cos it's a huge pain, but figuring out how to make factory functions work and having a universal JSONArray to <T extends JSONable> function would be SO DANG USEFUL
+    //Maybe set up a universal converter by specifying a "class" value in the JSON (or encoded as a parameter) and running a switch-case over it? Sloppy but it would do it better than a fresh function for each dang class
+  StressTrack[] getStressTracks(JSONArray array) {
+    if (array == null) return new StressTrack[0];
+    StressTrack[] tracks = new StressTrack[array.size()];
+    for (int i = 0; i < array.size(); i++) {
+      JSONObject json = array.getJSONObject(i);
+      tracks[i] = new StressTrack(json);
+    }
+    return tracks;
+  }
+  //LT ToDo: Yeah this is so dumb
+  ArrayList<StressPacket> getStressPacketQueue(JSONArray array) {
+    ArrayList<StressPacket> list = new ArrayList<StressPacket>();
+    if (array == null) return list;
+    for (int i = 0; i < array.size(); i++) {
+      JSONObject json = array.getJSONObject(i);
+      list.add( new StressPacket(json) );
+    }
+    return list;
+  }
+  
+  // Mechanical functionality
+  //================================================================
+
+
+  // Stress
+  //================================================================
+  public void addStress(int amount, int type, String description) {
+    StressPacket packet = new StressPacket(amount, type, description);
+    addStress(packet);
+  }
+  public void addStress(StressPacket packet) {
+    stressQueue.add(packet);
+  }
+  public void autoResolveStressQueue() {
+    //Automatically resolve all queued stress
+    while ( !stressQueue.isEmpty() ) {
+      StressPacket packet = stressQueue.get(0);
+      if ( !stressTracks[packet.type].offerStress(packet) ) {
+        //TODO:
+        println("[Stress] " + getName() + " cannot absorb " + packet + ", forwarding it to Consequences");
+        println("[TODO] Implement Consequence handling.");
+      }
+      stressQueue.remove(packet);
+    }
+    
+  }
+  
+
+
+
 }

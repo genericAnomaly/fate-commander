@@ -56,6 +56,43 @@ public class TestDocument extends CommanderDocument {
     saveJSONObject(json, "save/testsave2.json");
   }
   
+  void drySave() {
+    JSONObject json = toJSON();
+    println(json);
+  }
+  
+  
+  void testStress() {
+    Actor test = actorList.get(0);
+    StressPacket packet = new StressPacket(2, 0, "Hit in the guts by a unit test!");
+    test.addStress(packet);
+    print(test.getStress());
+    
+    test.autoResolveStressQueue();
+    print(test.getStress());
+    
+    packet = new StressPacket(1, 1, "Hit in the emotional guts by a unit test!");
+    test.addStress(packet);
+    packet = new StressPacket(3, 1, "Hit in the emotional guts by a unit test!");
+    test.addStress(packet);
+    packet = new StressPacket(4, 1, "Hit in the emotional guts by a unit test!");
+    test.addStress(packet);
+    print(test.getStress());
+    
+    test.autoResolveStressQueue();
+    print(test.getStress());
+    
+    
+    packet = new StressPacket(1, 0, "Here're some that aren't gonna be resolved prior to serialisation!");
+    test.addStress(packet);
+    packet = new StressPacket(2, 0, "Here're some that aren't gonna be resolved prior to serialisation!");
+    test.addStress(packet);
+    packet = new StressPacket(3, 0, "Here're some that aren't gonna be resolved prior to serialisation!");
+    test.addStress(packet);
+    drySave();
+    //TODO: Change to a SINGLE StressPacket queue per Actor so resolution occurs in correct order
+    
+  }
 
   
 }

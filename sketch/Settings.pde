@@ -6,6 +6,11 @@ public class Settings {
   int numSkills;
   int skillPeak;
   
+  //Stress
+  String[] stressNames;
+  int[] stressSkills;
+  int numStressTracks;
+  
   //Names
   String namesLast[];
   String namesFemale[];
@@ -32,6 +37,7 @@ public class Settings {
     namesFemale = loadStrings("first_female.txt");
     namesMale = loadStrings("first_male.txt");
     setDefaultSkills();
+    setDefaultStress();
   }
   
 
@@ -47,6 +53,16 @@ public class Settings {
     a = new JSONArray();
     for (int i=0; i<skillWeight.length; i++) a.setFloat(i, skillWeight[i]);
     json.setJSONArray("skillWeight", a);
+    
+    //Stress
+    json.setInt("numStressTracks", numStressTracks);
+    a = new JSONArray();
+    for (int i=0; i<stressSkills.length; i++) a.setInt(i, stressSkills[i]);
+    json.setJSONArray("stressSkills", a);
+    a = new JSONArray();
+    for (int i=0; i<stressNames.length; i++) a.setString(i, stressNames[i]);
+    json.setJSONArray("stressNames", a);
+    
     return json;
   }
   
@@ -58,6 +74,12 @@ public class Settings {
     skillPeak = json.getInt("skillPeak", skillPeak);
     skillNames =  JSONObjectReader.getStringArray(json, "skillNames", skillNames);
     skillWeight = JSONObjectReader.getFloatArray(json, "skillWeight", skillWeight);
+    
+    //Stress
+    numStressTracks = json.getInt("numStressTracks", numStressTracks);
+    stressNames =  JSONObjectReader.getStringArray(json, "stressNames", stressNames);
+    stressSkills =  JSONObjectReader.getIntArray(json, "stressSkills", stressSkills);
+    
     //Validate everything
     validateSettings();
   }
@@ -125,6 +147,15 @@ public class Settings {
     for (int i = 0; i < numSkills; i++) skillWeight[i] = 1;
   }
   
+  void setDefaultStress() {
+    stressNames = new String[2];
+    stressSkills = new int[2];
+    stressNames[0] = "Physical";
+    stressNames[1] = "Mental";
+    stressSkills[0] = Actor.SKILL_PHYSIQUE;
+    stressSkills[1] = Actor.SKILL_WILL;
+    numStressTracks = 2;
+  }
   
   
   String toString() {
@@ -165,3 +196,13 @@ public class Settings {
   }
   
 }
+
+
+/*
+//NB: Consider replacing all these loosely associated arrays in Settings with specialised struct-y classes in the long term, something like this
+public class StressDefinition implements JSONable {
+  int skill;
+  String name;
+}
+*/
+
