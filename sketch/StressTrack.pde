@@ -100,7 +100,7 @@ public class StressTrack implements JSONable {
 }
 
 
-public class StressPacket {
+public class StressPacket implements JSONable {
   int value;
   int type;
   String description;
@@ -111,8 +111,26 @@ public class StressPacket {
     description = d;
   }
   
+  public StressPacket(JSONObject json) {
+    loadJSON(json);
+  }
+  
   public String toString() {
     return "[StressPacket] (" + type + "/" + value + "/" + description + ")";
+  }
+  
+  public JSONObject toJSON() {
+    JSONObject json = new JSONObject();
+    json.setInt("value", value);
+    json.setInt("type", type);
+    json.setString("description", description);
+    return json;
+  }
+  
+  void loadJSON(JSONObject json) {
+    value = json.getInt("value", 0);
+    type = json.getInt("type", 0);
+    description = json.getString("description", "Description");
   }
   
 }

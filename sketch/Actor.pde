@@ -263,7 +263,7 @@ public class Actor extends CommanderObject {
     
     
     json.setJSONArray("stressTracks", JSONObjectReader.arrayToJSONArray(stressTracks));
-    //TODO: Serialise stressQueue
+    json.setJSONArray("stressQueue", JSONObjectReader.arrayListToJSONArray(stressQueue));
     
     return json;
   }
@@ -289,13 +289,11 @@ public class Actor extends CommanderObject {
     extraList = getNEList( JSONObjectReader.getJSONArray(json, "extraList", null) );
     noteList = getNEList( JSONObjectReader.getJSONArray(json, "noteList", null) );
     
-    //TODO: Load stress tracks from json instead of just generating them
-    //for (StressTrack track : stressTracks) track.regenerate();
-    initStressTracks();
     stressTracks = getStressTracks( JSONObjectReader.getJSONArray(json, "stressTracks", null) );
     
     //TODO: Load stressQueue
     //stressQueue = deserialise it
+    stressQueue = getStressPacketQueue( JSONObjectReader.getJSONArray(json, "stressQueue", null) );
   }
   
   //TODO: Find a better home for this as a helper function
@@ -319,6 +317,16 @@ public class Actor extends CommanderObject {
       tracks[i] = new StressTrack(json);
     }
     return tracks;
+  }
+  //LT ToDo: Yeah this is so dumb
+  ArrayList<StressPacket> getStressPacketQueue(JSONArray array) {
+    ArrayList<StressPacket> list = new ArrayList<StressPacket>();
+    if (array == null) return list;
+    for (int i = 0; i < array.size(); i++) {
+      JSONObject json = array.getJSONObject(i);
+      list.add( new StressPacket(json) );
+    }
+    return list;
   }
   
   // Mechanical functionality

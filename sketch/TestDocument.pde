@@ -82,6 +82,14 @@ public class TestDocument extends CommanderDocument {
     test.autoResolveStressQueue();
     print(test.getStress());
     
+    
+    packet = new StressPacket(1, 0, "Here're some that aren't gonna be resolved prior to serialisation!");
+    test.addStress(packet);
+    packet = new StressPacket(2, 0, "Here're some that aren't gonna be resolved prior to serialisation!");
+    test.addStress(packet);
+    packet = new StressPacket(3, 0, "Here're some that aren't gonna be resolved prior to serialisation!");
+    test.addStress(packet);
+    drySave();
     //TODO: Change to a SINGLE StressPacket queue per Actor so resolution occurs in correct order
     
   }
