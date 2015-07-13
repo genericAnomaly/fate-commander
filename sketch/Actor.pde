@@ -211,7 +211,7 @@ public class Actor extends CommanderObject {
     return s;
   }
   
-  //TODO: consider genericising this method to apply to anything implementing a stringable interface
+  //TODO: consider genericising this method to apply to anything implementing a recursively stringable interface
   String stringifyList(String title, ArrayList<NarrativeElement> list, String t) {
     String s = "";
     if (list == null) return t + "No " + title + "s\n";
@@ -288,11 +288,9 @@ public class Actor extends CommanderObject {
     consequenceList = getNEList( JSONObjectReader.getJSONArray(json, "consequenceList", null) );
     extraList = getNEList( JSONObjectReader.getJSONArray(json, "extraList", null) );
     noteList = getNEList( JSONObjectReader.getJSONArray(json, "noteList", null) );
-    
+
+    //TODO: Switch these all over to the generic function in the next branch    
     stressTracks = getStressTracks( JSONObjectReader.getJSONArray(json, "stressTracks", null) );
-    
-    //TODO: Load stressQueue
-    //stressQueue = deserialise it
     stressQueue = getStressPacketQueue( JSONObjectReader.getJSONArray(json, "stressQueue", null) );
   }
   
