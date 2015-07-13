@@ -53,6 +53,16 @@ public class Settings {
     a = new JSONArray();
     for (int i=0; i<skillWeight.length; i++) a.setFloat(i, skillWeight[i]);
     json.setJSONArray("skillWeight", a);
+    
+    //Stress
+    json.setInt("numStressTracks", numStressTracks);
+    a = new JSONArray();
+    for (int i=0; i<stressSkills.length; i++) a.setInt(i, stressSkills[i]);
+    json.setJSONArray("stressSkills", a);
+    a = new JSONArray();
+    for (int i=0; i<stressNames.length; i++) a.setString(i, stressNames[i]);
+    json.setJSONArray("stressNames", a);
+    
     return json;
   }
   
@@ -64,6 +74,12 @@ public class Settings {
     skillPeak = json.getInt("skillPeak", skillPeak);
     skillNames =  JSONObjectReader.getStringArray(json, "skillNames", skillNames);
     skillWeight = JSONObjectReader.getFloatArray(json, "skillWeight", skillWeight);
+    
+    //Stress
+    numStressTracks = json.getInt("numStressTracks", numStressTracks);
+    stressNames =  JSONObjectReader.getStringArray(json, "stressNames", stressNames);
+    stressSkills =  JSONObjectReader.getIntArray(json, "stressSkills", stressSkills);
+    
     //Validate everything
     validateSettings();
   }
