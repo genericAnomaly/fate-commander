@@ -41,6 +41,9 @@ public class CommanderDocument {
       error = true;
     }
     
+    
+    actorList =   JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "actorList", null),   new Actor(this) );
+    /*
     array = JSONObjectReader.getJSONObjectArray(json, "actorList");
     if (array != null) {
       actorList = new ArrayList<Actor>(array.length);
@@ -50,7 +53,12 @@ public class CommanderDocument {
     } else {
       error = true;
     }
+    */
     
+    locationList =   JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "locationList", null),   new Location(this, "Factory instance", "LocationFactory") );
+    
+    
+    /*
     array = JSONObjectReader.getJSONObjectArray(json, "locationList");
     if (array != null) {
       locationList = new ArrayList<Location>(array.length);
@@ -60,6 +68,7 @@ public class CommanderDocument {
     } else {
       error = true;
     }
+    */
     
     if (!checkIDs()) {
       println("[Warning] ID mismatch detected! Did you tweak your save file?");

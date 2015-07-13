@@ -11,6 +11,10 @@ public abstract class CommanderObject {
     id = json.getInt("id", -1);
   }
   
+  protected CommanderDocument getDocument() {
+    return document;
+  }
+  
   protected Settings getDocumentSettings() {
     return document.settings;
   }

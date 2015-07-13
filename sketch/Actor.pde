@@ -1,4 +1,4 @@
-public class Actor extends CommanderObject {
+public class Actor extends CommanderObject implements JSONable<Actor> {
   
   // Constants
   //================================================================
@@ -78,6 +78,10 @@ public class Actor extends CommanderObject {
     loadJSON(json);
   }
   
+  
+  public Actor construct(JSONObject json) {
+    return new Actor(getDocument(), json);
+  }
   
   // Initialisers
   //================================================================

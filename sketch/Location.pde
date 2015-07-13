@@ -1,4 +1,4 @@
-public class Location extends CommanderObject {
+public class Location extends CommanderObject implements JSONable<Location> {
   //Locations represent any location, usually a room, a building, or an external area
   
   //Roadmap:
@@ -44,6 +44,10 @@ public class Location extends CommanderObject {
     super(d, json);
     init();
     loadJSON(json);
+  }
+  
+  public Location construct(JSONObject json) {
+    return new Location(getDocument(), json);
   }
   
   private void init() {
