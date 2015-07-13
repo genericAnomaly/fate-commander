@@ -102,6 +102,17 @@
       "id": 0,
       "consequenceList": [],
       "gender": 1,
+      "stressTracks": [
+        {"track": [
+          0,
+          1
+        ]},
+        {"track": [
+          1,
+          0,
+          1
+        ]}
+      ],
       "isPlot": 0,
       "isDeceased": 0,
       "stuntList": [],
@@ -152,6 +163,17 @@
       "id": 1,
       "consequenceList": [],
       "gender": 1,
+      "stressTracks": [
+        {"track": [
+          0,
+          0,
+          0
+        ]},
+        {"track": [
+          0,
+          0
+        ]}
+      ],
       "isPlot": 0,
       "isDeceased": 0,
       "stuntList": [],
@@ -202,6 +224,16 @@
       "id": 2,
       "consequenceList": [],
       "gender": 0,
+      "stressTracks": [
+        {"track": [
+          0,
+          0
+        ]},
+        {"track": [
+          0,
+          0
+        ]}
+      ],
       "isPlot": 0,
       "isDeceased": 0,
       "stuntList": [],
@@ -258,6 +290,17 @@
       "id": 3,
       "consequenceList": [],
       "gender": 1,
+      "stressTracks": [
+        {"track": [
+          0,
+          0,
+          0
+        ]},
+        {"track": [
+          0,
+          0
+        ]}
+      ],
       "isPlot": 0,
       "isDeceased": 0,
       "stuntList": [],

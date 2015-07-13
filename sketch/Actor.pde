@@ -292,6 +292,7 @@ public class Actor extends CommanderObject {
     //TODO: Load stress tracks from json instead of just generating them
     //for (StressTrack track : stressTracks) track.regenerate();
     initStressTracks();
+    stressTracks = getStressTracks( JSONObjectReader.getJSONArray(json, "stressTracks", null) );
     
     //TODO: Load stressQueue
     //stressQueue = deserialise it
@@ -307,7 +308,18 @@ public class Actor extends CommanderObject {
     }
     return list;
   }
-
+  
+  //LT ToDo: Don't get hung up on this 'cos it's a huge pain, but figuring out how to make factory functions work and having a universal JSONArray to <T extends JSONable> function would be SO DANG USEFUL
+    //Maybe set up a universal converter by specifying a "class" value in the JSON (or encoded as a parameter) and running a switch-case over it? Sloppy but it would do it better than a fresh function for each dang class
+  StressTrack[] getStressTracks(JSONArray array) {
+    if (array == null) return new StressTrack[0];
+    StressTrack[] tracks = new StressTrack[array.size()];
+    for (int i = 0; i < array.size(); i++) {
+      JSONObject json = array.getJSONObject(i);
+      tracks[i] = new StressTrack(json);
+    }
+    return tracks;
+  }
   
   // Mechanical functionality
   //================================================================

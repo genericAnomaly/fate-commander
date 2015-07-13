@@ -1,8 +1,5 @@
 public class StressTrack implements JSONable {
-  //Consider making this and NarrativeElement into internal classes of Actor?
-
   Boolean[] track;
-  
 
   public StressTrack(int s) {
     init();
