@@ -4,7 +4,7 @@ public class Location extends CommanderObject implements JSONable<Location> {
   //Roadmap:
   //[X] Locations house Actors
   //[X] Locations have child Locations
-  //[ ] Location to and from JSON works
+  //[X] Location to and from JSON works
   //[ ] Locations will satisfy specific Motives
   //[ ] Locations occupy a volume of space
   //[ ] Location pathfinding, probably node-based
@@ -15,12 +15,12 @@ public class Location extends CommanderObject implements JSONable<Location> {
   String nameShort;
 
   //Actor occupation
-  ArrayList actorList;
+  ArrayList<Actor> actorList;
   int capacity;  //This is not a hard limit, might consider this metadata or associated with motives?
   
   //Location hierarchy
   Location parent;
-  ArrayList childList;
+  ArrayList<Location> childList;
   
   //JSON related IDs
   int parentID;
@@ -35,7 +35,6 @@ public class Location extends CommanderObject implements JSONable<Location> {
   Location (CommanderDocument d, String l, String s) {
     super(d);
     init();
-    //Build from arguments
     nameLong = l;
     nameShort = s;
   }
@@ -122,12 +121,10 @@ public class Location extends CommanderObject implements JSONable<Location> {
     String s = "";
     s += t + "[L] " + nameLong + "\n";
     t = t + "  ";
-    for (int i = 0; i < actorList.size(); i++) {
-      Actor a = (Actor) actorList.get(i);
+    for (Actor a : actorList) {
       s += t + a.toString(t);
     }
-    for (int i = 0; i < childList.size(); i++) {
-      Location l = (Location) childList.get(i);
+    for (Location l : childList) {
       s += l.toString(t);
     }
     return s;

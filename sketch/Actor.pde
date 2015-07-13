@@ -240,16 +240,14 @@ public class Actor extends CommanderObject implements JSONable<Actor> {
     if (location!=null) locationID = location.getID();
     json.setInt("locationID", locationID);
     JSONArray s = new JSONArray();
-    for (int i=0; i<skills.length; i++) {
-      s.setInt(i, skills[i]);
-    }
+    for (int i=0; i<skills.length; i++) s.setInt(i, skills[i]);
     json.setJSONArray("skills", s);
     
     //flags
-    json.setInt("isPlayer", isPlayer ? 1 : 0);
-    json.setInt("isPlot", isPlot ? 1 : 0);
-    json.setInt("isGenerated", isGenerated ? 1 : 0);
-    json.setInt("isDeceased", isDeceased ? 1 : 0);
+    json.setInt("isPlayer",      isPlayer ? 1 : 0);
+    json.setInt("isPlot",        isPlot ? 1 : 0);
+    json.setInt("isGenerated",   isGenerated ? 1 : 0);
+    json.setInt("isDeceased",    isDeceased ? 1 : 0);
     
     //NarrativeElements
     json.setJSONArray("aspectList",        JSONObjectReader.arrayListToJSONArray(aspectList));
