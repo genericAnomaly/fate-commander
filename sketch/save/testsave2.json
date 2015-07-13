@@ -103,7 +103,23 @@
       ],
       "isPlayer": 0,
       "isGenerated": 1,
-      "stressQueue": [],
+      "stressQueue": [
+        {
+          "description": "Here're some that aren't gonna be resolved prior to serialisation!",
+          "value": 1,
+          "type": 0
+        },
+        {
+          "description": "Here're some that aren't gonna be resolved prior to serialisation!",
+          "value": 2,
+          "type": 0
+        },
+        {
+          "description": "Here're some that aren't gonna be resolved prior to serialisation!",
+          "value": 3,
+          "type": 0
+        }
+      ],
       "luck": 1,
       "lName": "Bicknell",
       "locationID": 1,
@@ -119,7 +135,7 @@
         ]},
         {"track": [
           1,
-          0,
+          1,
           1
         ]}
       ],

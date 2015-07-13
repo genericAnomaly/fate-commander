@@ -169,6 +169,21 @@ public static class JSONObjectReader {
     return list;
   }*/
   
+  public static <T extends JSONable> ArrayList<T> toArrayList(JSONArray array, T factory) {
+    //Reads in a JSONArray to an ArrayList of any JSONable implementing class T
+    ArrayList<T> list = new ArrayList<T>();
+    if (array == null || factory == null) return list; 
+    for (int i = 0; i < array.size(); i++) {
+      JSONObject json = array.getJSONObject(i);
+      list.add( (T) factory.construct(json) );
+    }
+    return list;
+  }
+  
+  
+  
+  
+  
   
   
   public static String[] getKeyArray(JSONObject json) {
