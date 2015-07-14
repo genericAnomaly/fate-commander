@@ -31,19 +31,21 @@ public class StressTrack implements JSONable<StressTrack> {
   }
   
   void loadJSON(JSONObject json) {
+    track = JSONObjectReader.getBooleanArray(json, "track", null);
+    /*
     int[] loading = JSONObjectReader.getIntArray(json, "track", null);
     if (loading == null) return; //LT Todo: alert the user that their save's janked
     track = new Boolean[loading.length];
     for (int i = 0; i < loading.length; i++) {
       track[i] = false;
       if (loading[i] == 1) track[i] = true;
-    }
+    }*/
   }
   
   JSONObject toJSON() {
     JSONObject json = new JSONObject();
     JSONArray array = new JSONArray();
-    for (int i=0; i<track.length; i++) array.setInt(i, track[i] ? 1 : 0 );
+    for (int i=0; i<track.length; i++) array.setBoolean(i, track[i]);
     json.setJSONArray("track", array);
     return json;
   }

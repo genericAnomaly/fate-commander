@@ -244,10 +244,10 @@ public class Actor extends CommanderObject implements JSONable<Actor> {
     json.setJSONArray("skills", s);
     
     //flags
-    json.setInt("isPlayer",      isPlayer ? 1 : 0);
-    json.setInt("isPlot",        isPlot ? 1 : 0);
-    json.setInt("isGenerated",   isGenerated ? 1 : 0);
-    json.setInt("isDeceased",    isDeceased ? 1 : 0);
+    json.setBoolean("isPlayer",      isPlayer);
+    json.setBoolean("isPlot",        isPlot);
+    json.setBoolean("isGenerated",   isGenerated);
+    json.setBoolean("isDeceased",    isDeceased);
     
     //NarrativeElements
     json.setJSONArray("aspectList",        JSONObjectReader.arrayListToJSONArray(aspectList));
@@ -273,10 +273,10 @@ public class Actor extends CommanderObject implements JSONable<Actor> {
     //relations
     locationID = json.getInt("locationID", -1);  //-1 = no location
     //flags
-    isPlayer =      JSONObjectReader.getBoolean(json, "isPlayer",    false);
-    isPlot =        JSONObjectReader.getBoolean(json, "isPlot",      false);
-    isGenerated =   JSONObjectReader.getBoolean(json, "isGenerated", false);
-    isDeceased =    JSONObjectReader.getBoolean(json, "isDeceased",  false);
+    isPlayer =      json.getBoolean("isPlayer",    false);
+    isPlot =        json.getBoolean("isPlot",      false);
+    isGenerated =   json.getBoolean("isGenerated", false);
+    isDeceased =    json.getBoolean("isDeceased",  false);
     //JSONables
     //NarrativeElements
     aspectList =          JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "aspectList", null),        new NarrativeElement() );

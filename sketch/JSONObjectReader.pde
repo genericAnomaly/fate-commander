@@ -1,25 +1,35 @@
 import java.util.Set;
 
 public static class JSONObjectReader {
-  //Static methods for safely reading values from a JSONObject
-  
   /*
-  Wrappers:
-  Wraps the following existing JSONObject functions with code to return a fallback value when dealing with missing keys and other exceptions
-  [x] getJSONArray()        Gets the JSONArray value associated with a key
-  [x] getJSONObject()       Gets the JSONObject value associated with a key
+  Static methods for safely reading values from a JSONObject
   
-  Two-step convenience methods; first pull the JSONArray at key in json, then wrap its built-in toPrimitiveArray functions. Returns fallback value if key missing or exception thrown
-  [x] getStringArray()      Gets an array at key as an array of Strings
-  [x] getIntArray()         Gets an array at key as array of ints
+  All JSONHelper methods will return a provided fallback or null if they encounter a missing key or type mismatch exception
   
-  New:
-  //Mimic getPrimitiveArray function above but for floats, which don't have a built in getFloatArray function 
-  [x] getFloatArray()       Gets an array at key as array of floats
-  //Reads in a Boolean saved as an int
-  [x] getBoolean()          Gets a Boolean value associated with a key
+  Simple wrappers:
+      getJSONArray          Gets the JSONArray value associated with a key
+      getJSONObject         Gets the JSONObject value associated with a key
   
-  //TODO document that new junk
+  Two-step convenience methods equivalent to calling getJSONArray(json, key).toPrimitiveArray()
+      getStringArray        Gets an array at key as an array of Strings
+      getIntArray           Gets an array at key as an array of ints
+      getFloatArray         Gets an array at key as an array of floats (note that there is no native JSONObject.getFloatArray() for some reason)
+      getBooleanArray       Gets an array at key as an array of Booleans //TODO 
+      
+  Wrapper method for retrieving a Boolean value stored as an int
+      getBoolean            Gets a Boolean value associated with a key
+      //TODO: Consider going through and replacing this with the existing native (but inexplicably undocumented) getBoolean and setBoolean JSONObject methods
+  
+  to JSONArray convenience methods
+      arrayListToJSONArray  Returns the JSONArray representation of the provided ArrayList<? extends JSONable>
+      arrayToJSONArray      Returns the JSONArray representation of the provided JSONable[]
+  
+  JSONable deserialisation method
+      toArrayList           Loads the provided JSONArray into an ArrayList of any JSONable implementing class provided as a factory instane 
+  
+  Key check methods
+      getKeyArray           Returns an array of all keys in the provided JSONObject
+      keyPresent            Returns true if key is present in json
   */
   
   
@@ -113,6 +123,22 @@ public static class JSONObjectReader {
     return floats;
   }
   
+  public static Boolean[] getBooleanArray(JSONObject json, String key, Boolean[] fallback) {
+    if (!keyPresent(json, key) ) return fallback;
+    JSONArray array = getJSONArray(json, key, null);
+    if (array == null) return fallback;
+    
+    Boolean[] bools = new Boolean[array.size()];;
+    for (int i=0; i < bools.length; i++) {
+      try {
+         bools[i] = array.getBoolean(i);
+      } catch (Exception e) {
+        println("[Exception] getBoolean() threw an exception for the value at " + key + "[" + i + "], using fallback values");
+        return fallback;
+      }
+    }
+    return bools;
+  }
   
   //Helper: Retrieve Booleans stored as ints
   //======================================================================================================================================
@@ -179,8 +205,5 @@ public static class JSONObjectReader {
     println("[Notice] Expected key " + key + " was not found!");
     return false;
   }
-  
-  
-  //TODO: Update ALL the functions in here that use try-catch blocks to deal with potential missing keys to check with keyPresent first
   
 }
