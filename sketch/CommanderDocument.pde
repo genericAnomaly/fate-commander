@@ -6,12 +6,10 @@ public class CommanderDocument {
   
   
   public CommanderDocument() {
-    //TODO: Constructor stub
     init();
   }
   
   public CommanderDocument(JSONObject json) {
-    //TODO: Constructor stub
     init();
     loadJSON(json);
     //TODO: if loadJSON returns false, inform the user. I think this is actually the right time to use throwing exceptions? Dunno, research it.
@@ -26,7 +24,6 @@ public class CommanderDocument {
   }
   
   private Boolean loadJSON(JSONObject json) {
-    //TODO: implement
     //Load in values from passed json
     Boolean error = false;
     JSONObject object;
@@ -41,25 +38,8 @@ public class CommanderDocument {
       error = true;
     }
     
-    array = JSONObjectReader.getJSONObjectArray(json, "actorList");
-    if (array != null) {
-      actorList = new ArrayList<Actor>(array.length);
-      for(int i=0; i < array.length; i++) {
-        actorList.add( new Actor(this, array[i]) );
-      }
-    } else {
-      error = true;
-    }
-    
-    array = JSONObjectReader.getJSONObjectArray(json, "locationList");
-    if (array != null) {
-      locationList = new ArrayList<Location>(array.length);
-      for(int i=0; i < array.length; i++) {
-        locationList.add( new Location(this, array[i]) );
-      }
-    } else {
-      error = true;
-    }
+    actorList =      JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "actorList", null),      new Actor(this) );
+    locationList =   JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "locationList", null),   new Location(this, "Factory instance", "LocationFactory") );
     
     if (!checkIDs()) {
       println("[Warning] ID mismatch detected! Did you tweak your save file?");

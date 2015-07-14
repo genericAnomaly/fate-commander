@@ -1,4 +1,4 @@
-public class NarrativeElement implements JSONable {
+public class NarrativeElement implements JSONable<NarrativeElement> {
   
   static final int ELEMENT_TYPE_ASPECT = 0;
   static final int ELEMENT_TYPE_STUNT = 1;
@@ -29,7 +29,10 @@ public class NarrativeElement implements JSONable {
     loadJSON(json);
   }
   
-  
+  public NarrativeElement() {
+    init();
+    description = "Empty constructor NarrativeElement - for use as a factory object only!";
+  }
   
   
   public void init() {
@@ -43,7 +46,7 @@ public class NarrativeElement implements JSONable {
     name = json.getString("name", name);
     description = json.getString("description", description);
     type = json.getInt("type", type);
-    isDisabled = JSONObjectReader.getBoolean(json, "isDisabled", isDisabled);
+    isDisabled = json.getBoolean("isDisabled", isDisabled);
   }
   
   public JSONObject toJSON() {
@@ -51,8 +54,13 @@ public class NarrativeElement implements JSONable {
     json.setString("name", name);
     json.setString("description", description);
     json.setInt("type", type);
-    json.setInt("isDisabled", isDisabled ? 1 : 0);
+    json.setBoolean("isDisabled", isDisabled);
     return json;
+  }
+  
+  
+  public NarrativeElement construct(JSONObject json) {
+    return new NarrativeElement(json);
   }
   
 }

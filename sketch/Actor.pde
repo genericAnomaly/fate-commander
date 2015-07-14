@@ -1,4 +1,4 @@
-public class Actor extends CommanderObject {
+public class Actor extends CommanderObject implements JSONable<Actor> {
   
   // Constants
   //================================================================
@@ -79,6 +79,10 @@ public class Actor extends CommanderObject {
   }
   
   
+  public Actor construct(JSONObject json) {
+    return new Actor(getDocument(), json);
+  }
+  
   // Initialisers
   //================================================================
   
@@ -119,19 +123,7 @@ public class Actor extends CommanderObject {
     println();
   }
   
-  /*
-  private void loadStressTracks(JSONArray json) {
-    //TODO: actually implement this
-    stressTracks = new StressTrack[getDocumentSettings().numStressTracks]; // Base this on length of array maybe to avoid potential exceptions from json meddling?
-    for (int i = 0; i < stressTracks.length; i++) {
-      //TODO: Get the relevant JSON
-      stressTracks[i] = new StressTrack(2);
-    }
-    
-    //TODO: sort out the json version
-    initStressTracks();
-  }
-  */
+
   
   
   private String getStressTrackName(int stressType) {
@@ -188,8 +180,10 @@ public class Actor extends CommanderObject {
     s += stringifyList("Note", noteList, t);
     
     //Stress
-    s+= t + "Stress\n";
+    s += t + "Stress:\n";
     for (int i = 0; i < stressTracks.length; i++) s += t + " " + getDocumentSettings().stressNames[i] + stressTracks[i] + "\n";
+    s += t + "Stress Queue:\n";
+    for (StressPacket packet : stressQueue) s += t + " " + packet + "\n";
     
     //Skills
     s += t + "Skills:\n";
@@ -246,22 +240,23 @@ public class Actor extends CommanderObject {
     if (location!=null) locationID = location.getID();
     json.setInt("locationID", locationID);
     JSONArray s = new JSONArray();
-    for (int i=0; i<skills.length; i++) {
-      s.setInt(i, skills[i]);
-    }
+    for (int i=0; i<skills.length; i++) s.setInt(i, skills[i]);
     json.setJSONArray("skills", s);
-    json.setInt("isPlayer", isPlayer ? 1 : 0);
-    json.setInt("isPlot", isPlot ? 1 : 0);
-    json.setInt("isGenerated", isGenerated ? 1 : 0);
-    json.setInt("isDeceased", isDeceased ? 1 : 0);
     
-    json.setJSONArray("aspectList", JSONObjectReader.arrayListToJSONArray(aspectList));
-    json.setJSONArray("stuntList", JSONObjectReader.arrayListToJSONArray(stuntList));
-    json.setJSONArray("consequenceList", JSONObjectReader.arrayListToJSONArray(consequenceList));
-    json.setJSONArray("extraList", JSONObjectReader.arrayListToJSONArray(extraList));
-    json.setJSONArray("noteList", JSONObjectReader.arrayListToJSONArray(noteList));
+    //flags
+    json.setBoolean("isPlayer",      isPlayer);
+    json.setBoolean("isPlot",        isPlot);
+    json.setBoolean("isGenerated",   isGenerated);
+    json.setBoolean("isDeceased",    isDeceased);
     
+    //NarrativeElements
+    json.setJSONArray("aspectList",        JSONObjectReader.arrayListToJSONArray(aspectList));
+    json.setJSONArray("stuntList",         JSONObjectReader.arrayListToJSONArray(stuntList));
+    json.setJSONArray("consequenceList",   JSONObjectReader.arrayListToJSONArray(consequenceList));
+    json.setJSONArray("extraList",         JSONObjectReader.arrayListToJSONArray(extraList));
+    json.setJSONArray("noteList",          JSONObjectReader.arrayListToJSONArray(noteList));
     
+    //Stress
     json.setJSONArray("stressTracks", JSONObjectReader.arrayToJSONArray(stressTracks));
     json.setJSONArray("stressQueue", JSONObjectReader.arrayListToJSONArray(stressQueue));
     
@@ -278,22 +273,24 @@ public class Actor extends CommanderObject {
     //relations
     locationID = json.getInt("locationID", -1);  //-1 = no location
     //flags
-    isPlayer = JSONObjectReader.getBoolean(json, "isPlayer", false);
-    isPlot = JSONObjectReader.getBoolean(json, "isPlot", false);
-    isGenerated = JSONObjectReader.getBoolean(json, "isGenerated", false);
-    isDeceased = JSONObjectReader.getBoolean(json, "isDeceased", false);
+    isPlayer =      json.getBoolean("isPlayer",    false);
+    isPlot =        json.getBoolean("isPlot",      false);
+    isGenerated =   json.getBoolean("isGenerated", false);
+    isDeceased =    json.getBoolean("isDeceased",  false);
+    //JSONables
     //NarrativeElements
-    aspectList = getNEList( JSONObjectReader.getJSONArray(json, "aspectList", null) );
-    stuntList = getNEList( JSONObjectReader.getJSONArray(json, "stuntList", null) );
-    consequenceList = getNEList( JSONObjectReader.getJSONArray(json, "consequenceList", null) );
-    extraList = getNEList( JSONObjectReader.getJSONArray(json, "extraList", null) );
-    noteList = getNEList( JSONObjectReader.getJSONArray(json, "noteList", null) );
-
-    //TODO: Switch these all over to the generic function in the next branch    
-    stressTracks = getStressTracks( JSONObjectReader.getJSONArray(json, "stressTracks", null) );
-    stressQueue = getStressPacketQueue( JSONObjectReader.getJSONArray(json, "stressQueue", null) );
+    aspectList =          JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "aspectList", null),        new NarrativeElement() );
+    stuntList =           JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "stuntList", null),         new NarrativeElement() );
+    consequenceList =     JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "consequenceList", null),   new NarrativeElement() );
+    extraList =           JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "extraList", null),         new NarrativeElement() );
+    noteList =            JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "noteList", null),          new NarrativeElement() );
+    //Stress
+    stressQueue =         JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "stressQueue", null),       new StressPacket()     );
+    stressTracks =        JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "stressTracks", null),      new StressTrack()      ).toArray(stressTracks);
+    
   }
   
+  /*
   //TODO: Find a better home for this as a helper function
   ArrayList<NarrativeElement> getNEList(JSONArray array) {
     ArrayList<NarrativeElement> list = new ArrayList<NarrativeElement>();
@@ -304,6 +301,7 @@ public class Actor extends CommanderObject {
     }
     return list;
   }
+  
   
   //LT ToDo: Don't get hung up on this 'cos it's a huge pain, but figuring out how to make factory functions work and having a universal JSONArray to <T extends JSONable> function would be SO DANG USEFUL
     //Maybe set up a universal converter by specifying a "class" value in the JSON (or encoded as a parameter) and running a switch-case over it? Sloppy but it would do it better than a fresh function for each dang class
@@ -326,6 +324,7 @@ public class Actor extends CommanderObject {
     }
     return list;
   }
+  */
   
   // Mechanical functionality
   //================================================================

@@ -101,9 +101,25 @@
         0,
         2
       ],
-      "isPlayer": 0,
-      "isGenerated": 1,
-      "stressQueue": [],
+      "isPlayer": false,
+      "isGenerated": true,
+      "stressQueue": [
+        {
+          "description": "Here're some that aren't gonna be resolved prior to serialisation!",
+          "value": 1,
+          "type": 0
+        },
+        {
+          "description": "Here're some that aren't gonna be resolved prior to serialisation!",
+          "value": 2,
+          "type": 0
+        },
+        {
+          "description": "Here're some that aren't gonna be resolved prior to serialisation!",
+          "value": 3,
+          "type": 0
+        }
+      ],
       "luck": 1,
       "lName": "Bicknell",
       "locationID": 1,
@@ -114,27 +130,27 @@
       "gender": 1,
       "stressTracks": [
         {"track": [
-          0,
-          1
+          false,
+          true
         ]},
         {"track": [
-          1,
-          0,
-          1
+          true,
+          true,
+          true
         ]}
       ],
-      "isPlot": 0,
-      "isDeceased": 0,
+      "isPlot": true,
+      "isDeceased": false,
       "stuntList": [],
       "aspectList": [
         {
-          "isDisabled": 0,
+          "isDisabled": false,
           "description": "Description",
           "name": "High Concept",
           "type": 0
         },
         {
-          "isDisabled": 0,
+          "isDisabled": false,
           "description": "Description",
           "name": "Trouble",
           "type": 0
@@ -163,8 +179,8 @@
         0,
         0
       ],
-      "isPlayer": 0,
-      "isGenerated": 1,
+      "isPlayer": false,
+      "isGenerated": true,
       "stressQueue": [],
       "luck": 1,
       "lName": "Schaeffer",
@@ -176,27 +192,27 @@
       "gender": 1,
       "stressTracks": [
         {"track": [
-          0,
-          0,
-          0
+          false,
+          false,
+          false
         ]},
         {"track": [
-          0,
-          0
+          false,
+          false
         ]}
       ],
-      "isPlot": 0,
-      "isDeceased": 0,
+      "isPlot": false,
+      "isDeceased": false,
       "stuntList": [],
       "aspectList": [
         {
-          "isDisabled": 0,
+          "isDisabled": false,
           "description": "Description",
           "name": "High Concept",
           "type": 0
         },
         {
-          "isDisabled": 0,
+          "isDisabled": false,
           "description": "Description",
           "name": "Trouble",
           "type": 0
@@ -225,8 +241,8 @@
         0,
         0
       ],
-      "isPlayer": 0,
-      "isGenerated": 1,
+      "isPlayer": false,
+      "isGenerated": true,
       "stressQueue": [],
       "luck": 1,
       "lName": "Palmer",
@@ -238,32 +254,32 @@
       "gender": 0,
       "stressTracks": [
         {"track": [
-          0,
-          0
+          false,
+          false
         ]},
         {"track": [
-          0,
-          0
+          false,
+          false
         ]}
       ],
-      "isPlot": 0,
-      "isDeceased": 0,
+      "isPlot": false,
+      "isDeceased": false,
       "stuntList": [],
       "aspectList": [
         {
-          "isDisabled": 0,
+          "isDisabled": false,
           "description": "What do you mean, \"'new chief medical officer!?\"",
           "name": "Yes I'm A Doctor",
           "type": 0
         },
         {
-          "isDisabled": 0,
+          "isDisabled": false,
           "description": "You've got the training and credentials, but you're not really used to treating patients with only two legs...",
           "name": "Not That Kind Of Doctor",
           "type": 0
         },
         {
-          "isDisabled": 0,
+          "isDisabled": false,
           "description": "When things go terribly wrong, through no fault of your own, you tend to be in a position to affect the outcome of events, for good or for ill.",
           "name": "The Right Place At The Wrong Time",
           "type": 0
@@ -292,8 +308,8 @@
         0,
         0
       ],
-      "isPlayer": 0,
-      "isGenerated": 1,
+      "isPlayer": false,
+      "isGenerated": true,
       "stressQueue": [],
       "luck": 1,
       "lName": "Taggart",
@@ -305,27 +321,27 @@
       "gender": 1,
       "stressTracks": [
         {"track": [
-          0,
-          0,
-          0
+          false,
+          false,
+          false
         ]},
         {"track": [
-          0,
-          0
+          false,
+          false
         ]}
       ],
-      "isPlot": 0,
-      "isDeceased": 0,
+      "isPlot": false,
+      "isDeceased": false,
       "stuntList": [],
       "aspectList": [
         {
-          "isDisabled": 0,
+          "isDisabled": false,
           "description": "Description",
           "name": "High Concept",
           "type": 0
         },
         {
-          "isDisabled": 0,
+          "isDisabled": false,
           "description": "Description",
           "name": "Trouble",
           "type": 0

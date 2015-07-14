@@ -1,52 +1,72 @@
 import java.util.Set;
 
 public static class JSONObjectReader {
-  //Static methods for safely reading values from a JSONObject
-  
   /*
-  JSONObject functions to wrap
-  [x] getJSONArray()        Gets the JSONArray value associated with a key
-  [x] getJSONObject()       Gets the JSONObject value associated with a key
+  Static methods for safely reading values from a JSONObject
   
+  All JSONHelper methods will return a provided fallback or null if they encounter a missing key or type mismatch exception
   
-  JSONArray functions to wrap (Note these are just called on JSONObjects and a key containing an array)
-  [x] getStringArray()      Gets an array at key as an array of Strings
-  [x] getIntArray()         Gets an array at key as array of ints
+  Simple wrappers:
+      getJSONArray          Gets the JSONArray value associated with a key
+      getJSONObject         Gets the JSONObject value associated with a key
   
-  New functions
-  [x] getFloatArray()       Gets an array at key as array of floats
-  [x] getJSONObjectArray()  Gets an array at key as array of JSONObjects
-  [x] getBoolean()          Gets a Boolean value associated with a key
+  Two-step convenience methods equivalent to calling getJSONArray(json, key).toPrimitiveArray()
+      getStringArray        Gets an array at key as an array of Strings
+      getIntArray           Gets an array at key as an array of ints
+      getFloatArray         Gets an array at key as an array of floats (note that there is no native JSONObject.getFloatArray() for some reason)
+      getBooleanArray       Gets an array at key as an array of Booleans //TODO 
+      
+  Wrapper method for retrieving a Boolean value stored as an int
+      getBoolean            Gets a Boolean value associated with a key
+      //TODO: Consider going through and replacing this with the existing native (but inexplicably undocumented) getBoolean and setBoolean JSONObject methods
+  
+  to JSONArray convenience methods
+      arrayListToJSONArray  Returns the JSONArray representation of the provided ArrayList<? extends JSONable>
+      arrayToJSONArray      Returns the JSONArray representation of the provided JSONable[]
+  
+  JSONable deserialisation method
+      toArrayList           Loads the provided JSONArray into an ArrayList of any JSONable implementing class provided as a factory instane 
+  
+  Key check methods
+      getKeyArray           Returns an array of all keys in the provided JSONObject
+      keyPresent            Returns true if key is present in json
   */
   
+  
+  
+  
+  
+  //Helper: Retrieve a JSONArray object from a JSONObject and fallback to either null or a provided fallback value if something goes wrong
+  //======================================================================================================================================
   public static JSONArray getJSONArray(JSONObject json, String key) {
     return getJSONArray(json, key, null);
   }
-  
   public static JSONArray getJSONArray(JSONObject json, String key, JSONArray fallback) {
-    JSONArray array;
     if (!keyPresent(json, key) ) return fallback;
+    JSONArray array;
     try {
       array = json.getJSONArray(key);
     } catch (Exception e) {
-      println("[Exception] Failed to find an array at key " + key + ", using fallback values");
+      println("[Exception] Failed to find a JSONArray at key " + key + ", using fallback values");
       e.printStackTrace();
       return fallback;
     }
     return array;
   }
   
+  
+  //Helper: Retrieve a JSONObject object from a JSONObject and fallback to either null or a provided fallback value if something goes wrong
+  //======================================================================================================================================
   public static JSONObject getJSONObject(JSONObject json, String key) {
     return getJSONObject(json, key, null);
   }
-  
   public static JSONObject getJSONObject(JSONObject json, String key, JSONObject fallback) {
-    JSONObject object;
     if (!keyPresent(json, key) ) return fallback;
+    JSONObject object;
     try {
       object = json.getJSONObject(key);
     } catch (Exception e) {
-      println("[Exception] Failed to find a json object at key " + key + ", using fallback values");
+      println("[Exception] Failed to find a JSONObject at key " + key + ", using fallback values");
       e.printStackTrace();
       return fallback;
     }
@@ -54,10 +74,12 @@ public static class JSONObjectReader {
   }
   
   
+  //Helpers: Retrieve arrays of primitives from a JSONObject w/ built-in fallback 
+  //======================================================================================================================================
   public static int[] getIntArray(JSONObject json, String key, int[] fallback) {
+    if (!keyPresent(json, key) ) return fallback;
     JSONArray array = getJSONArray(json, key, null);
     if (array == null) return fallback;
-    
     int[] ints;
     try {
       ints = array.getIntArray();
@@ -70,9 +92,9 @@ public static class JSONObjectReader {
   }
   
   public static String[] getStringArray(JSONObject json, String key, String[] fallback) {
+    if (!keyPresent(json, key) ) return fallback;
     JSONArray array = getJSONArray(json, key, null);
     if (array == null) return fallback;
-    
     String[] strings;
     try {
       strings = array.getStringArray();
@@ -84,8 +106,8 @@ public static class JSONObjectReader {
     return strings;
   }
   
-  
   public static float[] getFloatArray(JSONObject json, String key, float[] fallback) {
+    if (!keyPresent(json, key) ) return fallback;
     JSONArray array = getJSONArray(json, key, null);
     if (array == null) return fallback;
     
@@ -101,32 +123,30 @@ public static class JSONObjectReader {
     return floats;
   }
   
-  
-  public static JSONObject[] getJSONObjectArray(JSONObject json, String key) {
-    return getJSONObjectArray(json, key, null);
-  }
-  
-  public static JSONObject[] getJSONObjectArray(JSONObject json, String key, JSONObject[] fallback) {
+  public static Boolean[] getBooleanArray(JSONObject json, String key, Boolean[] fallback) {
+    if (!keyPresent(json, key) ) return fallback;
     JSONArray array = getJSONArray(json, key, null);
     if (array == null) return fallback;
-    JSONObject[] objects = new JSONObject[array.size()];;
-    for (int i=0; i < objects.length; i++) {
+    
+    Boolean[] bools = new Boolean[array.size()];;
+    for (int i=0; i < bools.length; i++) {
       try {
-         objects[i] = array.getJSONObject(i);
+         bools[i] = array.getBoolean(i);
       } catch (Exception e) {
-        println("[Exception] getJSONObect() threw an exception for the value at " + key + "[" + i + "], using fallback values");
+        println("[Exception] getBoolean() threw an exception for the value at " + key + "[" + i + "], using fallback values");
         return fallback;
       }
     }
-    return objects;
+    return bools;
   }
   
-  
+  //Helper: Retrieve Booleans stored as ints
+  //======================================================================================================================================
   public static Boolean getBoolean(JSONObject json, String key) {
     return getBoolean(json, key, false);
   }
-  
   public static Boolean getBoolean(JSONObject json, String key, Boolean fallback) {
+    if (!keyPresent(json, key) ) return fallback;
     int d = 0;
     if (fallback) d = 1;  
     int read = json.getInt(key, d);
@@ -136,9 +156,8 @@ public static class JSONObjectReader {
   }
   
   
-  
-  
-
+  //Helpers: JSONable Collections -> JSONArray
+  //======================================================================================================================================
   public static JSONArray arrayListToJSONArray(ArrayList<? extends JSONable> list) {
     JSONArray array = new JSONArray();
     int i = 0;
@@ -148,7 +167,6 @@ public static class JSONObjectReader {
     }
     return array;
   }
-  
   public static JSONArray arrayToJSONArray(JSONable[] array) {
     JSONArray jarray = new JSONArray();
     int i = 0;
@@ -159,30 +177,33 @@ public static class JSONObjectReader {
     return jarray;
   }
   
-  /*
-  //ALMOST frickin' got it but OH WHOOPS NVM TYPE ERASURE FUCK
-  public static <T extends JSONable> ArrayList<T> readJSONArrayToArrayList(JSONArray array, ArrayList<T> list) {
+  
+  //Helper: JSONArray -> ArrayList<T extends JSONable>
+  //======================================================================================================================================
+  public static <T extends JSONable> ArrayList<T> toArrayList(JSONArray array, T factory) {
+    //Reads in a JSONArray to an ArrayList of any JSONable implementing class T
+    ArrayList<T> list = new ArrayList<T>();
+    if (array == null || factory == null) return list; 
     for (int i = 0; i < array.size(); i++) {
       JSONObject json = array.getJSONObject(i);
-      //list.add( new T(json) );
+      list.add( (T) factory.construct(json) );
     }
     return list;
-  }*/
+  }
   
   
-  
+  //Helpers: Key awareness on a JSONObject
+  //======================================================================================================================================
   public static String[] getKeyArray(JSONObject json) {
     Set keys = json.keys();
     String[] array = new String[1];
     array = (String[]) keys.toArray(array);
     return array;
   }
-  
   public static Boolean keyPresent(JSONObject json, String key) {
     if ( json.keys().contains(key) ) return true;
     println("[Notice] Expected key " + key + " was not found!");
     return false;
   }
-  //TODO: Update ALL the functions in here that use try-catch blocks to deal with potential missing keys to check with keyPresent first
   
 }

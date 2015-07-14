@@ -1,4 +1,4 @@
-public class StressTrack implements JSONable {
+public class StressTrack implements JSONable<StressTrack> {
   Boolean[] track;
 
   public StressTrack(int s) {
@@ -9,6 +9,11 @@ public class StressTrack implements JSONable {
   public StressTrack (JSONObject json) {
     init();
     loadJSON(json);
+  }
+  
+  public StressTrack () {
+    init();
+    //Empty constructor StressTrack - for use as a factory object only!
   }
   
   private void init() {
@@ -26,22 +31,29 @@ public class StressTrack implements JSONable {
   }
   
   void loadJSON(JSONObject json) {
+    track = JSONObjectReader.getBooleanArray(json, "track", null);
+    /*
     int[] loading = JSONObjectReader.getIntArray(json, "track", null);
     if (loading == null) return; //LT Todo: alert the user that their save's janked
     track = new Boolean[loading.length];
     for (int i = 0; i < loading.length; i++) {
       track[i] = false;
       if (loading[i] == 1) track[i] = true;
-    }
+    }*/
   }
   
   JSONObject toJSON() {
     JSONObject json = new JSONObject();
     JSONArray array = new JSONArray();
-    for (int i=0; i<track.length; i++) array.setInt(i, track[i] ? 1 : 0 );
+    for (int i=0; i<track.length; i++) array.setBoolean(i, track[i]);
     json.setJSONArray("track", array);
     return json;
   }
+  
+  public StressTrack construct(JSONObject json) {
+    return new StressTrack(json);
+  }
+  
   
   public void reset() {
     //Clear the stress track
@@ -100,10 +112,16 @@ public class StressTrack implements JSONable {
 }
 
 
-public class StressPacket implements JSONable {
+public class StressPacket implements JSONable<StressPacket> {
   int value;
   int type;
   String description;
+  
+  public StressPacket() {
+    value = -1;
+    type = -1;
+    description = "Empty constructor StressPacket - for use as a factory object only!";
+  }
   
   public StressPacket(int v, int t, String d) {
     value = v;
@@ -131,6 +149,10 @@ public class StressPacket implements JSONable {
     value = json.getInt("value", 0);
     type = json.getInt("type", 0);
     description = json.getString("description", "Description");
+  }
+  
+  public StressPacket construct(JSONObject json) {
+    return new StressPacket(json);
   }
   
 }
