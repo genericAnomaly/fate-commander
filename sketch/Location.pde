@@ -45,7 +45,7 @@ public class Location extends CommanderObject implements JSONable<Location> {
     loadJSON(json);
   }
   
-  public Location construct(JSONObject json) {
+  Location construct(JSONObject json) {
     return new Location(getDocument(), json);
   }
   
@@ -133,14 +133,8 @@ public class Location extends CommanderObject implements JSONable<Location> {
 
   /*
   void addConnection(Location l) {
+    //TODO: Stub for when I get to location connections
     //Adds a mutual connection between this location and l 
-    nodes.add(l);
-    l.nodes.add(this);
-  }
-  
-  
-  void draw() {
-    rect(origin.x, origin.y, dimensions.x, dimensions.y);
   }
   */
   

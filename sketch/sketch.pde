@@ -20,7 +20,7 @@ void setup() {
   println(testDocument);
   //testDocument.testSave();
   
-  //testDocument.drySave();
+  testDocument.drySave();
   
 }
 

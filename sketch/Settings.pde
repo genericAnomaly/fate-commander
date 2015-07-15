@@ -84,7 +84,7 @@ public class Settings {
     validateSettings();
   }
   
-  void validateSettings() {
+  private void validateSettings() {
     //Ensure skillPeak is not set too high to generate a pyramid
     int numActualSkills = 0;
     for (int i=0; i < skillWeight.length; i++) {
@@ -116,7 +116,7 @@ public class Settings {
   }
   
   
-  void setDefaultSkills() {
+  private void setDefaultSkills() {
     numSkills = 18;
     skillPeak = 3;
     skillNames = new String[numSkills];
@@ -141,13 +141,13 @@ public class Settings {
     setDefaultSkillWeight();
   }
   
-  void setDefaultSkillWeight() {
+  private void setDefaultSkillWeight() {
     //precondition: numSkills is set;
     skillWeight = new float[numSkills];
     for (int i = 0; i < numSkills; i++) skillWeight[i] = 1;
   }
   
-  void setDefaultStress() {
+  private void setDefaultStress() {
     stressNames = new String[2];
     stressSkills = new int[2];
     stressNames[0] = "Physical";
@@ -194,6 +194,8 @@ public class Settings {
     }
     return s;
   }
+  //TODO: Convenience getter for quickly setting up stress tracks?
+  //TODO: Evaluate whether these functions belong in Settings or in Actor :\
   
 }
 
