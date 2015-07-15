@@ -1,45 +1,47 @@
 public class StressTrack implements JSONable<StressTrack> {
+
+  // Instance variables
+  //================================================================
   Boolean[] track;
 
-  public StressTrack(int s) {
+  
+  // Constructors
+  //================================================================
+  
+  StressTrack(int s) {
     init();
     resize(s);
   }
   
-  public StressTrack (JSONObject json) {
+  StressTrack (JSONObject json) {
     init();
     loadJSON(json);
   }
   
-  public StressTrack () {
+  StressTrack () {
     init();
     //Empty constructor StressTrack - for use as a factory object only!
   }
+  
+  StressTrack construct(JSONObject json) {
+    return new StressTrack(json);
+  }
+
+
+  // Initialisers
+  //================================================================
   
   private void init() {
     track = new Boolean[2];
     for (int i = 0; i < track.length; i++) track[i] = false;
   }
   
-  public void resize(int newSize) {
-    Boolean[] newTrack = new Boolean[newSize];
-    for (int i = 0; i < newTrack.length; i++) newTrack[i] = false;
-    int copy = track.length;
-    if (newTrack.length < copy) copy = newTrack.length;
-    for (int i = 0; i < copy; i++) newTrack[i] = track[i];
-    track = newTrack;
-  }
+  
+  // JSONable
+  //================================================================
   
   void loadJSON(JSONObject json) {
     track = JSONObjectReader.getBooleanArray(json, "track", null);
-    /*
-    int[] loading = JSONObjectReader.getIntArray(json, "track", null);
-    if (loading == null) return; //LT Todo: alert the user that their save's janked
-    track = new Boolean[loading.length];
-    for (int i = 0; i < loading.length; i++) {
-      track[i] = false;
-      if (loading[i] == 1) track[i] = true;
-    }*/
   }
   
   JSONObject toJSON() {
@@ -50,16 +52,9 @@ public class StressTrack implements JSONable<StressTrack> {
     return json;
   }
   
-  public StressTrack construct(JSONObject json) {
-    return new StressTrack(json);
-  }
   
-  
-  public void reset() {
-    //Clear the stress track
-    //LT ToDo: Mention this to the logger
-    for (int i = 0; i < track.length; i++) track[i] = false;
-  }
+  // toString
+  //================================================================
   
   public String toString() {
     String s = "[StressTrack] => ";
@@ -71,25 +66,45 @@ public class StressTrack implements JSONable<StressTrack> {
     return s;
   }
   
-  public int size() {
+  
+  // Structure functionality
+  //================================================================
+  
+  void resize(int newSize) {
+    Boolean[] newTrack = new Boolean[newSize];
+    for (int i = 0; i < newTrack.length; i++) newTrack[i] = false;
+    int copy = track.length;
+    if (newTrack.length < copy) copy = newTrack.length;
+    for (int i = 0; i < copy; i++) newTrack[i] = track[i];
+    track = newTrack;
+  }
+  
+  int size() {
     return track.length;
   }
   
+
+  // Mechanical functionality
+  //================================================================
+  //LT TODO: Most methods classified as mechanical should probably mention their results to the logger object if that ever happens
+  
+  void reset() {
+    //Clear the stress track
+    //LT ToDo: Mention this to the logger
+    for (int i = 0; i < track.length; i++) track[i] = false;
+  }
   
   
-  public Boolean offerStress(StressPacket packet) {
-    //Attempt to absord the offeredStress into this stress track.
-    //Returns true if the stress could be absorbed, false otherwise.
-    
-    //TODO: Should this scream about StressPackets of the wrong type?
-      //No, StressTracks should not know what their stress type is, that's for the Actor to worry about
+  Boolean offerStress(StressPacket packet) {
+    //Attempt to absorb packet into this stress track.
+    //Returns true if the stress was absorbed, false otherwise.
     
     //TODO: Document level settings defining stress absorbtion
     //Like, a setting for if stress can be split between boxes
     //And different configurations like STRESS_TRACK _LINEAR, _DOUBLE_LINEAR, _FIBONACCI, _EXPONENTIAL
     //Let's just use linear for now and worry about different dissipation models later
     
-    //edge case: no damage, always absorbed so
+    //Edge case: Packet contains no shifts, returns true without consuming any boxes
     if (packet.value <= 0) return true;
     
     //Try each box from small to large
@@ -102,14 +117,10 @@ public class StressTrack implements JSONable<StressTrack> {
     }
     return false;
   }
-  
-  
-  
-  
-  
-  
-  
 }
+
+
+
 
 
 public class StressPacket implements JSONable<StressPacket> {
@@ -117,44 +128,40 @@ public class StressPacket implements JSONable<StressPacket> {
   int type;
   String description;
   
-  public StressPacket() {
-    value = -1;
-    type = -1;
-    description = "Empty constructor StressPacket - for use as a factory object only!";
-  }
-  
-  public StressPacket(int v, int t, String d) {
+  StressPacket(int v, int t, String d) {
     value = v;
     type = t;
     description = d;
   }
-  
-  public StressPacket(JSONObject json) {
+  StressPacket(JSONObject json) {
     loadJSON(json);
   }
-  
-  public String toString() {
-    return "[StressPacket] (" + type + "/" + value + "/" + description + ")";
+  StressPacket() {
+    value = -1;
+    type = -1;
+    description = "Empty constructor StressPacket - for use as a factory object only!";
+  }
+
+  StressPacket construct(JSONObject json) {
+    return new StressPacket(json);
   }
   
-  public JSONObject toJSON() {
+  JSONObject toJSON() {
     JSONObject json = new JSONObject();
     json.setInt("value", value);
     json.setInt("type", type);
     json.setString("description", description);
     return json;
   }
-  
   void loadJSON(JSONObject json) {
     value = json.getInt("value", 0);
     type = json.getInt("type", 0);
     description = json.getString("description", "Description");
   }
   
-  public StressPacket construct(JSONObject json) {
-    return new StressPacket(json);
+  String toString() {
+    return "[StressPacket] (" + type + "/" + value + "/" + description + ")";
   }
-  
 }
 
 

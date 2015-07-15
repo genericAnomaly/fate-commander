@@ -1,5 +1,9 @@
 public class Settings {
   
+
+  // Instance variables
+  //================================================================
+
   //Skills
   String[] skillNames;
   float[] skillWeight;
@@ -17,7 +21,9 @@ public class Settings {
   String namesMale[];
   
   
-  //Constructors
+  // Constructors
+  //================================================================
+
   Settings() {
     //No argument supplied, load the defaults
     loadDefaults();
@@ -29,10 +35,11 @@ public class Settings {
   }
   
   
+  // Initialisers
+  //================================================================
   
   void loadDefaults () {
     //load/set the default values
-    //NB: All Processing's load methods rely on a sketch global set by setup and accessible by running dataPath(""); to avoid frustration just stop making objects outside of setup
     namesLast = loadStrings("last.txt");
     namesFemale = loadStrings("first_female.txt");
     namesMale = loadStrings("first_male.txt");
@@ -40,7 +47,73 @@ public class Settings {
     setDefaultStress();
   }
   
-
+  private void setDefaultSkills() {
+    numSkills = 18;
+    skillPeak = 3;
+    skillNames = new String[numSkills];
+    skillNames[Actor.SKILL_ATHLETICS]     = "Athletics";
+    skillNames[Actor.SKILL_BURGLARY]      = "Burglary";
+    skillNames[Actor.SKILL_CRAFTS]        = "Crafts";
+    skillNames[Actor.SKILL_CONTACTS]      = "Contacts";
+    skillNames[Actor.SKILL_DECEIVE]       = "Deceive";
+    skillNames[Actor.SKILL_DRIVE]         = "Drive";
+    skillNames[Actor.SKILL_EMPATHY]       = "Empathy";
+    skillNames[Actor.SKILL_FIGHT]         = "Fight";
+    skillNames[Actor.SKILL_INVESTIGATE]   = "Investigate";
+    skillNames[Actor.SKILL_LORE]          = "Lore";
+    skillNames[Actor.SKILL_NOTICE]        = "Notice";
+    skillNames[Actor.SKILL_PHYSIQUE]      = "Physique";
+    skillNames[Actor.SKILL_PROVOKE]       = "Provoke";
+    skillNames[Actor.SKILL_RAPPORT]       = "Rapport";
+    skillNames[Actor.SKILL_RESOURCES]     = "Resources";
+    skillNames[Actor.SKILL_SHOOT]         = "Shoot";
+    skillNames[Actor.SKILL_STEALTH]       = "Stealth";
+    skillNames[Actor.SKILL_WILL]          = "Will";
+    skillWeight = new float[numSkills];
+    for (int i = 0; i < numSkills; i++) skillWeight[i] = 1;
+  }
+  
+  private void setDefaultStress() {
+    stressNames = new String[2];
+    stressSkills = new int[2];
+    stressNames[0] = "Physical";
+    stressNames[1] = "Mental";
+    stressSkills[0] = Actor.SKILL_PHYSIQUE;
+    stressSkills[1] = Actor.SKILL_WILL;
+    numStressTracks = 2;
+  }
+  
+  private void validateSettings() {
+    //Ensure skillPeak is not set too high to generate a pyramid
+    int numActualSkills = 0;
+    for (int i=0; i < skillWeight.length; i++) {
+      if (skillWeight[i] > 0) numActualSkills++;
+    }
+    if ( (skillPeak*skillPeak+1)/2 > numActualSkills) println("[Error] Not enough skills present to generate skill pyramids " + skillPeak + " tall. Adjusting value...");
+    while ( (skillPeak*skillPeak+1)/2 > numActualSkills) skillPeak--;
+    
+    //Ensure skillNames and skillWeight are the same length
+    //If not, truncate or pad skillWeight to match skillNames
+    if (skillNames.length != skillWeight.length) {
+      println("[Error] Skill name and weight mismatch; adjusting...");
+      float[] newSkillWeight = new float[skillNames.length];
+      for (int i=0; i < skillNames.length; i++) {
+        if (i < skillWeight.length) {
+          newSkillWeight[i] = skillWeight[i];
+        } else {
+          newSkillWeight[i] = 1.0;
+        }
+      }
+      skillWeight = newSkillWeight;
+    }
+    
+    //Make sure numSkills is correct
+    if (numSkills != skillNames.length) println("[Error] " + skillNames.length + " skills are named but numSkills is " + numSkills + ". Setting numSkills to " + skillNames.length);
+  }
+  
+  
+  // JSONable
+  //================================================================
   
   JSONObject toJSON() {
     JSONObject json = new JSONObject();
@@ -80,83 +153,12 @@ public class Settings {
     stressNames =  JSONObjectReader.getStringArray(json, "stressNames", stressNames);
     stressSkills =  JSONObjectReader.getIntArray(json, "stressSkills", stressSkills);
     
-    //Validate everything
     validateSettings();
   }
   
-  private void validateSettings() {
-    //Ensure skillPeak is not set too high to generate a pyramid
-    int numActualSkills = 0;
-    for (int i=0; i < skillWeight.length; i++) {
-      if (skillWeight[i] > 0) numActualSkills++;
-    }
-    if ( (skillPeak*skillPeak+1)/2 > numActualSkills) println("[Error] Not enough skills present to generate skill pyramids " + skillPeak + " tall. Adjusting value...");
-    while ( (skillPeak*skillPeak+1)/2 > numActualSkills) skillPeak--;
-    
-    //Ensure skillNames and skillWeight are the same length
-    //If not, truncate or pad skillWeight to match skillNames
-    if (skillNames.length != skillWeight.length) {
-      println("[Error] Skill name and weight mismatch; adjusting...");
-      float[] newSkillWeight = new float[skillNames.length];
-      for (int i=0; i < skillNames.length; i++) {
-        if (i < skillWeight.length) {
-          newSkillWeight[i] = skillWeight[i];
-        } else {
-          newSkillWeight[i] = 1.0;
-        }
-      }
-      skillWeight = newSkillWeight;
-    }
-    
-    //Make sure numSkills is correct
-    if (numSkills != skillNames.length) {
-      println("[Error] " + skillNames.length + " skills are named but numSkills is " + numSkills + ". Setting numSkills to " + skillNames.length);
-    }
-    
-  }
-  
-  
-  private void setDefaultSkills() {
-    numSkills = 18;
-    skillPeak = 3;
-    skillNames = new String[numSkills];
-    skillNames[Actor.SKILL_ATHLETICS]     = "Athletics";
-    skillNames[Actor.SKILL_BURGLARY]      = "Burglary";
-    skillNames[Actor.SKILL_CRAFTS]        = "Crafts";
-    skillNames[Actor.SKILL_CONTACTS]      = "Contacts";
-    skillNames[Actor.SKILL_DECEIVE]       = "Deceive";
-    skillNames[Actor.SKILL_DRIVE]         = "Drive";
-    skillNames[Actor.SKILL_EMPATHY]       = "Empathy";
-    skillNames[Actor.SKILL_FIGHT]         = "Fight";
-    skillNames[Actor.SKILL_INVESTIGATE]   = "Investigate";
-    skillNames[Actor.SKILL_LORE]          = "Lore";
-    skillNames[Actor.SKILL_NOTICE]        = "Notice";
-    skillNames[Actor.SKILL_PHYSIQUE]      = "Physique";
-    skillNames[Actor.SKILL_PROVOKE]       = "Provoke";
-    skillNames[Actor.SKILL_RAPPORT]       = "Rapport";
-    skillNames[Actor.SKILL_RESOURCES]     = "Resources";
-    skillNames[Actor.SKILL_SHOOT]         = "Shoot";
-    skillNames[Actor.SKILL_STEALTH]       = "Stealth";
-    skillNames[Actor.SKILL_WILL]          = "Will";
-    setDefaultSkillWeight();
-  }
-  
-  private void setDefaultSkillWeight() {
-    //precondition: numSkills is set;
-    skillWeight = new float[numSkills];
-    for (int i = 0; i < numSkills; i++) skillWeight[i] = 1;
-  }
-  
-  private void setDefaultStress() {
-    stressNames = new String[2];
-    stressSkills = new int[2];
-    stressNames[0] = "Physical";
-    stressNames[1] = "Mental";
-    stressSkills[0] = Actor.SKILL_PHYSIQUE;
-    stressSkills[1] = Actor.SKILL_WILL;
-    numStressTracks = 2;
-  }
-  
+
+  // toString
+  //================================================================
   
   String toString() {
     //Mostly for debug, obvs
@@ -166,6 +168,10 @@ public class Settings {
     s += "Names (l/f/m): " + namesLast.length + "/" + namesFemale.length + "/" + namesMale.length + "\n";
     return s; 
   }
+  
+  
+  // Convenience helpers
+  //================================================================
   
   //Actor generation helpers
   String getRandomFirstName(int gender) {
