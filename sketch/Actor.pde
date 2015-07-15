@@ -53,11 +53,10 @@ public class Actor extends CommanderObject implements JSONable<Actor> {
   Boolean isGenerated;
   Boolean isDeceased;
   
-  
   //CommanderObject relationships
   Location location;
   
-  //JSON Export
+  //JSONable CommanderObject relationship export
   int locationID;
   
   
