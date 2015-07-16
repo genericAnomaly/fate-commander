@@ -2,14 +2,14 @@ public class Location extends CommanderObject implements JSONable<Location> {
   //Locations represent any location, usually a room, a building, or an external area
   
   //Roadmap:
-  //[X] Locations house Actors
-  //[X] Locations have child Locations
-  //[X] Location to and from JSON works
   //[ ] Locations will satisfy specific Motives
   //[ ] Locations occupy a volume of space
   //[ ] Location pathfinding, probably node-based
   //[ ] Load custom PCG rules for generating complex collections of locations
   
+  // Instance variables
+  //================================================================
+
   //Metadata
   String nameLong;
   String nameShort;
@@ -18,19 +18,21 @@ public class Location extends CommanderObject implements JSONable<Location> {
   ArrayList<Actor> actorList;
   int capacity;  //This is not a hard limit, might consider this metadata or associated with motives?
   
-  //Location hierarchy
+  //Location tree relationships
   Location parent;
   ArrayList<Location> childList;
   
-  //JSON related IDs
+  //JSONable CommanderObject relationship export
   int parentID;
   
-  //Location in space and pathing
-  //(We'll deal with this stuff later)
+  //LT TODO: Location in space and pathing
   //ArrayList nodes;
   //PVector origin;
   //PVector dimensions;
   
+
+  // Constructors
+  //================================================================
   
   Location (CommanderDocument d, String l, String s) {
     super(d);
@@ -45,9 +47,13 @@ public class Location extends CommanderObject implements JSONable<Location> {
     loadJSON(json);
   }
   
-  public Location construct(JSONObject json) {
+  Location construct(JSONObject json) {
     return new Location(getDocument(), json);
   }
+  
+
+  // Initialisers
+  //================================================================
   
   private void init() {
     //Initialise this Location with default values
@@ -59,6 +65,31 @@ public class Location extends CommanderObject implements JSONable<Location> {
     childList = new ArrayList<Location>();
   }
   
+  
+  // toStrings
+  //================================================================
+  
+  String toString () {
+    return toString("");
+  }
+  
+  String toString (String t) {
+    String s = "";
+    s += t + "[L] " + nameLong + "\n";
+    t = t + "  ";
+    for (Actor a : actorList) {
+      s += t + a.toString(t);
+    }
+    for (Location l : childList) {
+      s += l.toString(t);
+    }
+    return s;
+  }
+  
+  
+  // JSONable
+  //================================================================
+  
   void loadJSON(JSONObject json) {
     nameLong = json.getString("nameLong", nameLong);
     nameShort = json.getString("nameShort", nameShort);
@@ -66,7 +97,6 @@ public class Location extends CommanderObject implements JSONable<Location> {
   }
   
   JSONObject toJSON() {
-    //TODO: get this proper working, figure out the best way to save state stuff like actors and children (it's definitely IDs but we gotta implement that first)
     JSONObject json = new JSONObject();
     json.setString("nameLong", nameLong);
     json.setString("nameShort", nameShort);
@@ -76,6 +106,17 @@ public class Location extends CommanderObject implements JSONable<Location> {
     json.setInt("parentID", parentID);
     return json;
   }
+
+
+
+
+
+  // Mechanical functionality
+  //================================================================
+  
+  
+  // Connections to other CommanderObjects 
+  //================================================================
   
   //TODO: Is it best practice to have Actor.location exposed like this?
   void addActor (Actor a) {
@@ -113,34 +154,11 @@ public class Location extends CommanderObject implements JSONable<Location> {
   
 
   
-  String toString () {
-    return toString("");
-  }
-  
-  String toString (String t) {
-    String s = "";
-    s += t + "[L] " + nameLong + "\n";
-    t = t + "  ";
-    for (Actor a : actorList) {
-      s += t + a.toString(t);
-    }
-    for (Location l : childList) {
-      s += l.toString(t);
-    }
-    return s;
-  }
-  
 
   /*
   void addConnection(Location l) {
+    //TODO: Stub for when I get to location connections
     //Adds a mutual connection between this location and l 
-    nodes.add(l);
-    l.nodes.add(this);
-  }
-  
-  
-  void draw() {
-    rect(origin.x, origin.y, dimensions.x, dimensions.y);
   }
   */
   

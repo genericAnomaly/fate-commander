@@ -1,9 +1,17 @@
 public class CommanderDocument {
+  
+  // Instance variables
+  //================================================================
+  
   String name;
   Settings settings;
   ArrayList<Actor> actorList;
   ArrayList<Location> locationList;
   
+  
+  
+  // Constructors
+  //================================================================
   
   public CommanderDocument() {
     init();
@@ -15,6 +23,9 @@ public class CommanderDocument {
     //TODO: if loadJSON returns false, inform the user. I think this is actually the right time to use throwing exceptions? Dunno, research it.
   }
   
+  // Initialisers
+  //================================================================
+  
   private void init() {
     //Initialise this document with the default values
     name = "Untitled Fate Commander Document";
@@ -22,16 +33,19 @@ public class CommanderDocument {
     actorList = new ArrayList<Actor>();
     locationList = new ArrayList<Location>();
   }
-  
-  private Boolean loadJSON(JSONObject json) {
+
+  // JSONable (not actually JSONable)
+  //================================================================
+    
+  Boolean loadJSON(JSONObject json) {
     //Load in values from passed json
     Boolean error = false;
-    JSONObject object;
-    JSONObject[] array;
     
+    //meta
     name = json.getString("name", name);
     
-    object = JSONObjectReader.getJSONObject(json, "settings");
+    //settings
+    JSONObject object = JSONObjectReader.getJSONObject(json, "settings");
     if (object != null) {
       settings = new Settings(object);
     } else {
@@ -41,13 +55,16 @@ public class CommanderDocument {
     actorList =      JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "actorList", null),      new Actor(this) );
     locationList =   JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "locationList", null),   new Location(this, "Factory instance", "LocationFactory") );
     
+    //Validate/tamper check
     if (!checkIDs()) {
       println("[Warning] ID mismatch detected! Did you tweak your save file?");
       repairIDs();
     }
     
+    //Relink references
     relinkIDs();
     
+    //TODO: Better error awareness?
     return !error;
   }
   
@@ -57,43 +74,32 @@ public class CommanderDocument {
     JSONObject json = new JSONObject();
     
     json.setString("name", name);
-    json.setJSONObject( "settings", settings.toJSON() );
-    json.setJSONArray( "actorList", getActorsAsJSON() );
-    json.setJSONArray( "locationList", getLocationsAsJSON() );
+    json.setJSONObject( "settings",         settings.toJSON() );
+    json.setJSONArray(  "actorList",        JSONObjectReader.arrayListToJSONArray(actorList) );
+    json.setJSONArray(  "locationList",     JSONObjectReader.arrayListToJSONArray(locationList) );
     
     return json;
   }
+
+
+  // toString stuff
+  //================================================================
   
   public String toString() {
-    //TODO: stub
     String s = "[FATE Commander Document]\n";
-    
     s += "Name: " + name + "\n";
     s += "Settings: " + settings + "\n";
     s += "Locations:\n";
     for (Location l : locationList) s += l;
     s += "Actors:\n";
     for (Actor a : actorList) s += a;
-    
     return s;
   }
+
   
-  public JSONArray getActorsAsJSON() {
-    JSONArray a = new JSONArray();
-    for (int i = 0; i < actorList.size(); i++) {
-      a.setJSONObject(i, actorList.get(i).toJSON());
-    }
-    return a;
-  }
-  
-  public JSONArray getLocationsAsJSON() {
-    JSONArray a = new JSONArray();
-    for (int i = 0; i < locationList.size(); i++) {
-      a.setJSONObject(i, locationList.get(i).toJSON());
-    }
-    return a;
-  }
-  
+  // Stubs for adding CommanderObjects; Maybe not necessary?
+  //================================================================
+
   public void addActor(Actor a) {
     //TODO: stub
   }
@@ -102,8 +108,13 @@ public class CommanderDocument {
     //TODO: stub
   }
   
+  
+  // JSONable helper methods
+  //  - For preserving relationships between CommanderObjects
+  //================================================================
+
   //A quick word on IDs: They literally only matter on import/export, which is why we can steamroll them here
-  public void setIDs() {
+  private void setIDs() {
     //Set ID values on all child CommanderObjects to match their index in their containing ArrayLists
     //Postcondition: This MUST be called by data export methods prior to calling ANY toJSON() methods
     //               Failure to do so will result in missing or corrupted relation information being saved!
@@ -111,7 +122,7 @@ public class CommanderDocument {
     for (int i=0; i < locationList.size(); i++) locationList.get(i).setID(i);
   }
   
-  public void relinkIDs() {
+  private void relinkIDs() {
     //This should only ever be run after reading in a document from JSON and running checkIDs()
     //Runs through every child CommanderObject and restores relationships to other CommanderObjects based on relational IDs
     for (Actor a : actorList) {
@@ -123,7 +134,7 @@ public class CommanderDocument {
     }
   }
   
-  public Boolean checkIDs() {
+  private Boolean checkIDs() {
     //This is the complement to setIDs and should only be run after reading in a document from JSON
     //Checks after that the id values of the loaded CommanderObjects match their actual keys
     //Shouldn't ever return false unless the save file was manually edited
@@ -132,7 +143,7 @@ public class CommanderDocument {
     return true;
   }
   
-  public void repairIDs() {
+  private void repairIDs() {
     //Run this if checkIDs returns false
     //Attempts to rebuild the CommanderObject lists and place everything at the indices indicated by their id values
     println("[Warning] Attempting to rebuild document lists in accordance with incongruent ids from save. This can cause unexpected behaviour!");
@@ -157,7 +168,7 @@ public class CommanderDocument {
       if (l.getID() >= 0 && l.getID() < locations.length && locations[l.getID()] == null) {
         locations[l.getID()] = l;
       } else {
-        println("[Warnig] Duplicate, missing, or OOB ID detected! Cannot automatically repair your save!");
+        println("[Warning] Duplicate, missing, or OOB ID detected! Cannot automatically repair your save!");
         return;
       }
     }

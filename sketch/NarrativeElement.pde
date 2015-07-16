@@ -17,22 +17,27 @@ public class NarrativeElement implements JSONable<NarrativeElement> {
   int value;                         //Roll modifier when this NE is invoked
 
   
-  public NarrativeElement(String n, String d, int t) {
+  NarrativeElement(String n, String d, int t) {
     init();
     name = n;
     description = d;
     if (t >= 0 && t < 5) type = t;
   }
 
-  public NarrativeElement(JSONObject json) {
+  NarrativeElement(JSONObject json) {
     init();
     loadJSON(json);
   }
   
-  public NarrativeElement() {
+  NarrativeElement() {
     init();
     description = "Empty constructor NarrativeElement - for use as a factory object only!";
   }
+  
+  NarrativeElement construct(JSONObject json) {
+    return new NarrativeElement(json);
+  }
+
   
   
   public void init() {
@@ -42,14 +47,14 @@ public class NarrativeElement implements JSONable<NarrativeElement> {
     isDisabled = false;
   }
   
-  public void loadJSON(JSONObject json) {
+  void loadJSON(JSONObject json) {
     name = json.getString("name", name);
     description = json.getString("description", description);
     type = json.getInt("type", type);
     isDisabled = json.getBoolean("isDisabled", isDisabled);
   }
   
-  public JSONObject toJSON() {
+  JSONObject toJSON() {
     JSONObject json = new JSONObject();
     json.setString("name", name);
     json.setString("description", description);
@@ -59,8 +64,5 @@ public class NarrativeElement implements JSONable<NarrativeElement> {
   }
   
   
-  public NarrativeElement construct(JSONObject json) {
-    return new NarrativeElement(json);
-  }
   
 }

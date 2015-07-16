@@ -53,11 +53,10 @@ public class Actor extends CommanderObject implements JSONable<Actor> {
   Boolean isGenerated;
   Boolean isDeceased;
   
-  
   //CommanderObject relationships
   Location location;
   
-  //JSON Export
+  //JSONable CommanderObject relationship export
   int locationID;
   
   
@@ -79,7 +78,7 @@ public class Actor extends CommanderObject implements JSONable<Actor> {
   }
   
   
-  public Actor construct(JSONObject json) {
+  Actor construct(JSONObject json) {
     return new Actor(getDocument(), json);
   }
   
@@ -113,37 +112,11 @@ public class Actor extends CommanderObject implements JSONable<Actor> {
   }
   
   private void initStressTracks() {
-    print("[DEBUG] initStressTracks() for " + getName() + ": ");
     stressQueue = new ArrayList<StressPacket>();
     stressTracks = new StressTrack[getDocumentSettings().numStressTracks];
-    for (int i = 0; i < stressTracks.length; i++) {
-      stressTracks[i] = new StressTrack( getStressTrackSize(i) );
-      print("Track " + i + " (" + getStressTrackName(i) + ") length " + getStressTrackSize(i) + " ");
-    }
-    println();
+    for (int i = 0; i < stressTracks.length; i++) stressTracks[i] = new StressTrack( getStressTrackSize(i) );
   }
-  
 
-  
-  
-  private String getStressTrackName(int stressType) {
-    return getDocumentSettings().stressNames[stressType];
-  }
-  private int getStressTrackSkillIndex(int stressType) {
-    return getDocumentSettings().stressSkills[stressType];
-  }
-  private int getStressTrackSize(int stressType) {
-    //LT ToDo: Get info from Settings object for custom StressTrack sizes
-    //TODO: Should this maybe go in the StressTrack class but as a static method?
-    int skillValue = skills[ getStressTrackSkillIndex(stressType) ];
-    int trackSize = 2;
-    if (skillValue > 0) trackSize = 3;
-    if (skillValue > 2) trackSize = 4;
-    return trackSize;
-  }
-  
-  
-  
   private void randomise() {
     //Generate random vital stats for this Actor.
     isGenerated = true;
@@ -155,7 +128,6 @@ public class Actor extends CommanderObject implements JSONable<Actor> {
     lName = getDocumentSettings().getRandomLastName();
     fName = getDocumentSettings().getRandomFirstName(gender);
     skills = getDocumentSettings().getRandomSkillPyramid();
-    //for (StressTrack track : stressTracks) track.regenerate();
     initStressTracks();
   }
   
@@ -167,6 +139,7 @@ public class Actor extends CommanderObject implements JSONable<Actor> {
     return toString("");
   }
   
+  //LT ToDo: Create an interface for everything with a print_r style recursive toString?
   String toString(String t) {
     String s = "";
     s += "[A] " + fName + " " + lName + " (" + luck + ")\n"; 
@@ -225,29 +198,38 @@ public class Actor extends CommanderObject implements JSONable<Actor> {
     return s;
   }
   
-  // JSON save/load
+  // JSONable
   //================================================================
   
   JSONObject toJSON() {
-    //Return this Actor in JSON notation for saving to file
     JSONObject json = new JSONObject();
+
+    //Meta
     json.setString("fName", fName);
     json.setString("lName", lName);
     json.setInt("gender", gender);
     json.setInt("luck", luck);
     json.setInt("id", getID());
-    locationID = -1;
-    if (location!=null) locationID = location.getID();
-    json.setInt("locationID", locationID);
-    JSONArray s = new JSONArray();
-    for (int i=0; i<skills.length; i++) s.setInt(i, skills[i]);
-    json.setJSONArray("skills", s);
-    
-    //flags
+
+    //Flags
     json.setBoolean("isPlayer",      isPlayer);
     json.setBoolean("isPlot",        isPlot);
     json.setBoolean("isGenerated",   isGenerated);
     json.setBoolean("isDeceased",    isDeceased);
+    
+    //LocationRef
+    locationID = -1;
+    if (location!=null) locationID = location.getID();
+    json.setInt("locationID", locationID);
+    
+    //Skills
+    JSONArray s = new JSONArray();
+    for (int i=0; i<skills.length; i++) s.setInt(i, skills[i]);
+    json.setJSONArray("skills", s);
+     
+    //Stress
+    json.setJSONArray("stressTracks",      JSONObjectReader.arrayToJSONArray(stressTracks));
+    json.setJSONArray("stressQueue",       JSONObjectReader.arrayListToJSONArray(stressQueue));
     
     //NarrativeElements
     json.setJSONArray("aspectList",        JSONObjectReader.arrayListToJSONArray(aspectList));
@@ -256,75 +238,41 @@ public class Actor extends CommanderObject implements JSONable<Actor> {
     json.setJSONArray("extraList",         JSONObjectReader.arrayListToJSONArray(extraList));
     json.setJSONArray("noteList",          JSONObjectReader.arrayListToJSONArray(noteList));
     
-    //Stress
-    json.setJSONArray("stressTracks", JSONObjectReader.arrayToJSONArray(stressTracks));
-    json.setJSONArray("stressQueue", JSONObjectReader.arrayListToJSONArray(stressQueue));
-    
     return json;
   }
   
+  //Figure this out later: Since T construct(JSONObject json) is in the interface, does loadJSON (which should probably be private) still need to be in JSONable?
   void loadJSON(JSONObject json) {
-    //Load in this Actor from a saved JSONObject
+    //Meta
     fName = json.getString("fName", fName);
     lName = json.getString("lName", lName);
     gender = json.getInt("gender", gender);
     luck = json.getInt("luck", luck);
-    skills = JSONObjectReader.getIntArray(json, "skills", skills);
-    //relations
-    locationID = json.getInt("locationID", -1);  //-1 = no location
-    //flags
+
+    //Flags
     isPlayer =      json.getBoolean("isPlayer",    false);
     isPlot =        json.getBoolean("isPlot",      false);
     isGenerated =   json.getBoolean("isGenerated", false);
     isDeceased =    json.getBoolean("isDeceased",  false);
-    //JSONables
+    
+    //Location Ref
+    locationID = json.getInt("locationID", -1);  //-1 = no location
+    
+    //Skills
+    skills =              JSONObjectReader.getIntArray(json, "skills", skills);
+    
+    //Stress
+    stressQueue =         JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "stressQueue", null),       new StressPacket()     );
+    stressTracks =        JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "stressTracks", null),      new StressTrack()      ).toArray(stressTracks);
+
     //NarrativeElements
     aspectList =          JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "aspectList", null),        new NarrativeElement() );
     stuntList =           JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "stuntList", null),         new NarrativeElement() );
     consequenceList =     JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "consequenceList", null),   new NarrativeElement() );
     extraList =           JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "extraList", null),         new NarrativeElement() );
     noteList =            JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "noteList", null),          new NarrativeElement() );
-    //Stress
-    stressQueue =         JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "stressQueue", null),       new StressPacket()     );
-    stressTracks =        JSONObjectReader.toArrayList( JSONObjectReader.getJSONArray(json, "stressTracks", null),      new StressTrack()      ).toArray(stressTracks);
     
   }
-  
-  /*
-  //TODO: Find a better home for this as a helper function
-  ArrayList<NarrativeElement> getNEList(JSONArray array) {
-    ArrayList<NarrativeElement> list = new ArrayList<NarrativeElement>();
-    if (array == null) return list;
-    for (int i = 0; i < array.size(); i++) {
-      JSONObject json = array.getJSONObject(i);
-      list.add( new NarrativeElement(json) );
-    }
-    return list;
-  }
-  
-  
-  //LT ToDo: Don't get hung up on this 'cos it's a huge pain, but figuring out how to make factory functions work and having a universal JSONArray to <T extends JSONable> function would be SO DANG USEFUL
-    //Maybe set up a universal converter by specifying a "class" value in the JSON (or encoded as a parameter) and running a switch-case over it? Sloppy but it would do it better than a fresh function for each dang class
-  StressTrack[] getStressTracks(JSONArray array) {
-    if (array == null) return new StressTrack[0];
-    StressTrack[] tracks = new StressTrack[array.size()];
-    for (int i = 0; i < array.size(); i++) {
-      JSONObject json = array.getJSONObject(i);
-      tracks[i] = new StressTrack(json);
-    }
-    return tracks;
-  }
-  //LT ToDo: Yeah this is so dumb
-  ArrayList<StressPacket> getStressPacketQueue(JSONArray array) {
-    ArrayList<StressPacket> list = new ArrayList<StressPacket>();
-    if (array == null) return list;
-    for (int i = 0; i < array.size(); i++) {
-      JSONObject json = array.getJSONObject(i);
-      list.add( new StressPacket(json) );
-    }
-    return list;
-  }
-  */
   
   // Mechanical functionality
   //================================================================
@@ -332,14 +280,14 @@ public class Actor extends CommanderObject implements JSONable<Actor> {
 
   // Stress
   //================================================================
-  public void addStress(int amount, int type, String description) {
+  void addStress(int amount, int type, String description) {
     StressPacket packet = new StressPacket(amount, type, description);
     addStress(packet);
   }
-  public void addStress(StressPacket packet) {
+  void addStress(StressPacket packet) {
     stressQueue.add(packet);
   }
-  public void autoResolveStressQueue() {
+  void autoResolveStressQueue() {
     //Automatically resolve all queued stress
     while ( !stressQueue.isEmpty() ) {
       StressPacket packet = stressQueue.get(0);
@@ -353,6 +301,23 @@ public class Actor extends CommanderObject implements JSONable<Actor> {
     
   }
   
+  //Convenience getters for Stress
+  //================================================================
+  private String getStressTrackName(int stressType) {
+    return getDocumentSettings().stressNames[stressType];
+  }
+  private int getStressTrackSkillIndex(int stressType) {
+    return getDocumentSettings().stressSkills[stressType];
+  }
+  private int getStressTrackSize(int stressType) {
+    //LT ToDo: Get info from Settings object for custom StressTrack sizes
+    //LT ToDo: Should this maybe go in the StressTrack class but as a static method?
+    int skillValue = skills[ getStressTrackSkillIndex(stressType) ];
+    int trackSize = 2;
+    if (skillValue > 0) trackSize = 3;
+    if (skillValue > 2) trackSize = 4;
+    return trackSize;
+  }
 
 
 
