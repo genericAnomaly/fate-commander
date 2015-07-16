@@ -95,7 +95,11 @@ public class CommanderDocument {
     for (Actor a : actorList) s += a;
     return s;
   }
+
   
+  // Stubs for adding CommanderObjects; Maybe not necessary?
+  //================================================================
+
   public void addActor(Actor a) {
     //TODO: stub
   }
@@ -104,6 +108,11 @@ public class CommanderDocument {
     //TODO: stub
   }
   
+  
+  // JSONable helper methods
+  //  - For preserving relationships between CommanderObjects
+  //================================================================
+
   //A quick word on IDs: They literally only matter on import/export, which is why we can steamroll them here
   private void setIDs() {
     //Set ID values on all child CommanderObjects to match their index in their containing ArrayLists
