@@ -10,7 +10,7 @@ void setup() {
   //testDocument.printActors();
 
   JSONObject saveFile = loadJSONObject("save/testsave2.json");
-  //testDocument = new TestDocument(saveFile);
+  testDocument = new TestDocument(saveFile);
   
   //testDocument.testNPCGeneration(8);
   
@@ -20,7 +20,9 @@ void setup() {
   println(testDocument);
   //testDocument.testSave();
   
-  testDocument.drySave();
+  //testDocument.drySave();
+  
+
   
 }
 

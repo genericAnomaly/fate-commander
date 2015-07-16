@@ -278,6 +278,24 @@ public class Actor extends CommanderObject implements JSONable<Actor> {
   //================================================================
 
 
+  // Rolls
+  //================================================================
+  
+  //TODO
+  //ArrayList<NarrativeElement> getApplicableNarrativeElements(RollRequest)
+  
+  int roll(int skillIndex) {
+    return roll(skillIndex, description, 0);
+  }
+  int roll(int skillIndex, int modifier) {
+    return dice() + modifier + skills(skillIndex);
+  }
+  int dice() {
+    int val = -4;
+    for (int i = 0; i < 4; i++) val += floor(random(3));
+    return val;
+  }
+  
   // Stress
   //================================================================
   void addStress(int amount, int type, String description) {
