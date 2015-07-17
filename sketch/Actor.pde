@@ -285,10 +285,10 @@ public class Actor extends CommanderObject implements JSONable<Actor> {
   //ArrayList<NarrativeElement> getApplicableNarrativeElements(RollRequest)
   
   int roll(int skillIndex) {
-    return roll(skillIndex, description, 0);
+    return roll(skillIndex, 0);
   }
   int roll(int skillIndex, int modifier) {
-    return dice() + modifier + skills(skillIndex);
+    return dice() + modifier + skills[skillIndex];
   }
   int dice() {
     int val = -4;
