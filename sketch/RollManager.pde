@@ -126,7 +126,7 @@ public class RollResult {
   
   Boolean isOutstanding() {
     if (rollShifts > 0 && alteredMinimumShifts <= 0) return true;
-    if (rollShifts <= 0 && alteredMaximumShifts < 0) return true;
+    if (rollShifts <= 0 && alteredMaximumShifts > 0) return true;
     return false;
   }
   

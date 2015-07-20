@@ -15,7 +15,7 @@ void setup() {
   //testDocument.testNPCGeneration(8);
   
   //testDocument.testLocations();
-  println(testDocument);
+ // println(testDocument);
   //testDocument.testStress();
   //println(testDocument);
   //testDocument.testSave();
@@ -23,7 +23,7 @@ void setup() {
   testDocument.drySave();
   
   
-  //testDocument.testBatchRolling();
+  testDocument.testBatchRolling();
 
   
 }
