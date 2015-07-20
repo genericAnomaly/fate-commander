@@ -230,21 +230,25 @@ public static class JSONObjectReader {
 
   public static JSONArray floatArrayToJSONArray(float[] in) {
     JSONArray array = new JSONArray();
+    if (in == null) return array;
     for (int i = 0; i < in.length; i++) array.setFloat(i, in[i]);
     return array;
   }
   public static JSONArray intArrayToJSONArray(int[] in) {
     JSONArray array = new JSONArray();
+    if (in == null) return array;
     for (int i = 0; i < in.length; i++) array.setInt(i, in[i]);
     return array;
   }
   public static JSONArray booleanArrayToJSONArray(Boolean[] in) {
     JSONArray array = new JSONArray();
+    if (in == null) return array;
     for (int i = 0; i < in.length; i++) array.setBoolean(i, in[i]);
     return array;
   }
   public static JSONArray stringArrayToJSONArray(String[] in) {
     JSONArray array = new JSONArray();
+    if (in == null) return array;
     for (int i = 0; i < in.length; i++) array.setString(i, in[i]);
     return array;
   }

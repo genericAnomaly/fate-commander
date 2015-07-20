@@ -81,6 +81,7 @@
   ],
   "actorList": [
     {
+      "isPlayer": false,
       "skills": [
         0,
         0,
@@ -101,7 +102,6 @@
         0,
         2
       ],
-      "isPlayer": false,
       "isGenerated": true,
       "stressQueue": [
         {
@@ -128,6 +128,8 @@
       "id": 0,
       "consequenceList": [],
       "gender": 1,
+      "isPlot": true,
+      "isDeceased": false,
       "stressTracks": [
         {"track": [
           false,
@@ -139,26 +141,31 @@
           true
         ]}
       ],
-      "isPlot": true,
-      "isDeceased": false,
       "stuntList": [],
       "aspectList": [
         {
           "isDisabled": false,
+          "keywords": [],
+          "skillsAffected": [],
           "description": "Description",
           "name": "High Concept",
+          "value": 0,
           "type": 0
         },
         {
           "isDisabled": false,
+          "keywords": [],
+          "skillsAffected": [],
           "description": "Description",
           "name": "Trouble",
+          "value": 0,
           "type": 0
         }
       ],
       "noteList": []
     },
     {
+      "isPlayer": false,
       "skills": [
         1,
         0,
@@ -179,7 +186,6 @@
         0,
         0
       ],
-      "isPlayer": false,
       "isGenerated": true,
       "stressQueue": [],
       "luck": 1,
@@ -190,6 +196,8 @@
       "id": 1,
       "consequenceList": [],
       "gender": 1,
+      "isPlot": false,
+      "isDeceased": false,
       "stressTracks": [
         {"track": [
           false,
@@ -201,26 +209,31 @@
           false
         ]}
       ],
-      "isPlot": false,
-      "isDeceased": false,
       "stuntList": [],
       "aspectList": [
         {
           "isDisabled": false,
+          "keywords": [],
+          "skillsAffected": [],
           "description": "Description",
           "name": "High Concept",
+          "value": 0,
           "type": 0
         },
         {
           "isDisabled": false,
+          "keywords": [],
+          "skillsAffected": [],
           "description": "Description",
           "name": "Trouble",
+          "value": 0,
           "type": 0
         }
       ],
       "noteList": []
     },
     {
+      "isPlayer": false,
       "skills": [
         2,
         0,
@@ -241,7 +254,6 @@
         0,
         0
       ],
-      "isPlayer": false,
       "isGenerated": true,
       "stressQueue": [],
       "luck": 1,
@@ -252,6 +264,8 @@
       "id": 2,
       "consequenceList": [],
       "gender": 0,
+      "isPlot": false,
+      "isDeceased": false,
       "stressTracks": [
         {"track": [
           false,
@@ -262,32 +276,52 @@
           false
         ]}
       ],
-      "isPlot": false,
-      "isDeceased": false,
-      "stuntList": [],
+      "stuntList": [
+		{
+          "isDisabled": false,
+          "keywords": [],
+          "skillsAffected": [
+		    9
+		  ],
+          "description": "+2 to all Science checks relating to the diagnosis and treatment of illness.",
+          "name": "PhD, Internal Medicine",
+          "value": 0,
+          "type": 0
+        }
+	  ],
       "aspectList": [
         {
           "isDisabled": false,
+          "keywords": [],
+          "skillsAffected": [],
           "description": "What do you mean, \"'new chief medical officer!?\"",
           "name": "Yes I'm A Doctor",
+          "value": 0,
           "type": 0
         },
         {
           "isDisabled": false,
+          "keywords": [],
+          "skillsAffected": [],
           "description": "You've got the training and credentials, but you're not really used to treating patients with only two legs...",
           "name": "Not That Kind Of Doctor",
+          "value": 0,
           "type": 0
         },
         {
           "isDisabled": false,
+          "keywords": [],
+          "skillsAffected": [],
           "description": "When things go terribly wrong, through no fault of your own, you tend to be in a position to affect the outcome of events, for good or for ill.",
           "name": "The Right Place At The Wrong Time",
+          "value": 0,
           "type": 0
         }
       ],
       "noteList": []
     },
     {
+      "isPlayer": false,
       "skills": [
         1,
         0,
@@ -308,7 +342,6 @@
         0,
         0
       ],
-      "isPlayer": false,
       "isGenerated": true,
       "stressQueue": [],
       "luck": 1,
@@ -319,6 +352,8 @@
       "id": 3,
       "consequenceList": [],
       "gender": 1,
+      "isPlot": false,
+      "isDeceased": false,
       "stressTracks": [
         {"track": [
           false,
@@ -330,20 +365,24 @@
           false
         ]}
       ],
-      "isPlot": false,
-      "isDeceased": false,
       "stuntList": [],
       "aspectList": [
         {
           "isDisabled": false,
+          "keywords": [],
+          "skillsAffected": [],
           "description": "Description",
           "name": "High Concept",
+          "value": 0,
           "type": 0
         },
         {
           "isDisabled": false,
+          "keywords": [],
+          "skillsAffected": [],
           "description": "Description",
           "name": "Trouble",
+          "value": 0,
           "type": 0
         }
       ],

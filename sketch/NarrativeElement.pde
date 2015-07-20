@@ -45,6 +45,10 @@ public class NarrativeElement implements JSONable<NarrativeElement> {
     description = "Description";
     type = ELEMENT_TYPE_NOTE;
     isDisabled = false;
+    
+    value = 0;
+    keywords = new ArrayList<String>();
+    skillsAffected = new Boolean[0];  //Must init to empty since NE's aren't allowed to know the Document
   }
   
   void loadJSON(JSONObject json) {
@@ -52,6 +56,12 @@ public class NarrativeElement implements JSONable<NarrativeElement> {
     description = json.getString("description", description);
     type = json.getInt("type", type);
     isDisabled = json.getBoolean("isDisabled", isDisabled);
+    value = json.getInt("value", value);
+    //skillsAffected = JSONObjectReader.getBooleanArray(json, "skillsAffected", skillsAffected);
+    //TODO: Better support for reading in ArrayLists?
+    String[] kw = JSONObjectReader.getStringArray(json, "keywords", new String[0] );
+    keywords = new ArrayList<String>();
+    for (String s : kw) keywords.add(s);
   }
   
   JSONObject toJSON() {
@@ -60,8 +70,51 @@ public class NarrativeElement implements JSONable<NarrativeElement> {
     json.setString("description", description);
     json.setInt("type", type);
     json.setBoolean("isDisabled", isDisabled);
+    json.setInt("value", value);
+    json.setJSONArray("skillsAffected", JSONObjectReader.booleanArrayToJSONArray(skillsAffected));
+    json.setJSONArray("keywords",       JSONObjectReader.stringArrayToJSONArray(keywords.toArray(new String[keywords.size()])));
     return json;
   }
+  
+  
+  
+  
+  
+  
+  
+  
+  // Mechanical hooks
+  //===============================================================
+
+  //Skill checks
+  Boolean affectsSkill(int skillIndex) {
+    if (skillsAffected.length < skillIndex) return false;
+    return skillsAffected[skillIndex];
+  }
+  void addSkill(int skillIndex) {
+    if (skillsAffected.length < skillIndex) {
+      Boolean[] s = new Boolean[skillIndex+1];
+      for (int i = 0; i < skillsAffected.length; i++) s[i] = skillsAffected[i];
+      skillsAffected = s;
+    }
+    skillsAffected[skillIndex] = true;
+  }
+  void removeSkill(int skillIndex) {
+    if (skillsAffected.length < skillIndex) return;
+    skillsAffected[skillIndex] = false;
+  }
+  Boolean affectsKeyword(String kw) {
+    if (keywords.contains(kw)) return true;
+    return false;
+  }
+  void addKeyword(String kw) {
+    if (keywords.contains(kw)) return;
+    keywords.add(kw);
+  }
+  void removeKeyword(String kw) {
+    if (keywords.contains(kw)) keywords.remove(kw);
+  }
+  
   
   
   

@@ -5,7 +5,7 @@ void setup() {
 //  sketchDocument = new CommanderDocument();
   
   
-  testDocument = new TestDocument();
+  //testDocument = new TestDocument();
   //testDocument.testLoadSettings();
   //testDocument.printActors();
 
@@ -15,7 +15,7 @@ void setup() {
   //testDocument.testNPCGeneration(8);
   
   //testDocument.testLocations();
-  //println(testDocument);
+  println(testDocument);
   //testDocument.testStress();
   //println(testDocument);
   //testDocument.testSave();
