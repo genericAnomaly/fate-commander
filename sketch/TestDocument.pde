@@ -94,5 +94,17 @@ public class TestDocument extends CommanderDocument {
     
   }
 
+
+
+  void testBatchRolling() {
+    
+    RollManager manager = new RollManager(this);
+    RollRequest request = new RollRequest();
+    
+    println("[TEST] Testing a simple batch roll");
+    manager.batchRoll(request, actorList);
+    
+  }
+
   
 }

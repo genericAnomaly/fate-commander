@@ -17,11 +17,13 @@ void setup() {
   //testDocument.testLocations();
   //println(testDocument);
   //testDocument.testStress();
-  println(testDocument);
+  //println(testDocument);
   //testDocument.testSave();
   
   //testDocument.drySave();
   
+  
+  testDocument.testBatchRolling();
 
   
 }
