@@ -140,6 +140,7 @@ public static class JSONObjectReader {
     return bools;
   }
   
+  /*
   //Helper: Retrieve Booleans stored as ints
   //======================================================================================================================================
   public static Boolean getBoolean(JSONObject json, String key) {
@@ -154,6 +155,7 @@ public static class JSONObjectReader {
     if (read == 1) return true;
     return fallback;
   }
+  */
   
   
   //Helpers: JSONable Collections -> JSONArray
@@ -205,5 +207,48 @@ public static class JSONObjectReader {
     println("[Notice] Expected key " + key + " was not found!");
     return false;
   }
+  
+  
+  
+  
+  
+  
+
+  
+  /*
+  public static JSONArray primitiveArrayToJSONArray(Object[] prims) {
+    JSONArray array = new JSONArray();
+    for (int i = 0; i < prims.length; i++) {
+      if (prims[i] instanceof Integer) array.setInt(i, (Integer) prims[i]);
+      if (prims[i] instanceof Float)   array.setFloat(i, (Float) prims[i]);
+      if (prims[i] instanceof Boolean) array.setBoolean(i, (Boolean) prims[i]);
+      if (prims[i] instanceof String)  array.setString(i, (String) prims[i]);
+    }
+    return array;
+  }*/
+  //That doesn't work because of float/Float int/Integer
+
+  public static JSONArray floatArrayToJSONArray(float[] in) {
+    JSONArray array = new JSONArray();
+    for (int i = 0; i < in.length; i++) array.setFloat(i, in[i]);
+    return array;
+  }
+  public static JSONArray intArrayToJSONArray(int[] in) {
+    JSONArray array = new JSONArray();
+    for (int i = 0; i < in.length; i++) array.setInt(i, in[i]);
+    return array;
+  }
+  public static JSONArray booleanArrayToJSONArray(Boolean[] in) {
+    JSONArray array = new JSONArray();
+    for (int i = 0; i < in.length; i++) array.setBoolean(i, in[i]);
+    return array;
+  }
+  public static JSONArray stringArrayToJSONArray(String[] in) {
+    JSONArray array = new JSONArray();
+    for (int i = 0; i < in.length; i++) array.setString(i, in[i]);
+    return array;
+  }
+  
+  
   
 }

@@ -223,9 +223,10 @@ public class Actor extends CommanderObject implements JSONable<Actor> {
     json.setInt("locationID", locationID);
     
     //Skills
-    JSONArray s = new JSONArray();
-    for (int i=0; i<skills.length; i++) s.setInt(i, skills[i]);
-    json.setJSONArray("skills", s);
+    json.setJSONArray("skills", JSONObjectReader.intArrayToJSONArray(skills)  );
+//    JSONArray s = new JSONArray();
+//    for (int i=0; i<skills.length; i++) s.setInt(i, skills[i]);
+//    json.setJSONArray("skills", s);
      
     //Stress
     json.setJSONArray("stressTracks",      JSONObjectReader.arrayToJSONArray(stressTracks));

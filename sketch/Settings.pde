@@ -117,24 +117,31 @@ public class Settings {
   
   JSONObject toJSON() {
     JSONObject json = new JSONObject();
+    
+    //Skills
     json.setInt("numSkills", numSkills);
     json.setInt("skillPeak", skillPeak);
-    JSONArray a;
-    a = new JSONArray();
-    for (int i=0; i<skillNames.length; i++) a.setString(i, skillNames[i]);
-    json.setJSONArray("skillNames", a);
-    a = new JSONArray();
-    for (int i=0; i<skillWeight.length; i++) a.setFloat(i, skillWeight[i]);
-    json.setJSONArray("skillWeight", a);
+//    JSONArray a;
+//    a = new JSONArray();
+//    for (int i=0; i<skillNames.length; i++) a.setString(i, skillNames[i]);
+//    json.setJSONArray("skillNames", a);
+//    a = new JSONArray();
+//    for (int i=0; i<skillWeight.length; i++) a.setFloat(i, skillWeight[i]);
+//    json.setJSONArray("skillWeight", a);
+    json.setJSONArray("skillNames",     JSONObjectReader.stringArrayToJSONArray(skillNames) );
+    json.setJSONArray("skillWeight",    JSONObjectReader.floatArrayToJSONArray(skillWeight) );
     
     //Stress
     json.setInt("numStressTracks", numStressTracks);
-    a = new JSONArray();
-    for (int i=0; i<stressSkills.length; i++) a.setInt(i, stressSkills[i]);
-    json.setJSONArray("stressSkills", a);
-    a = new JSONArray();
-    for (int i=0; i<stressNames.length; i++) a.setString(i, stressNames[i]);
-    json.setJSONArray("stressNames", a);
+    json.setJSONArray("stressSkills",   JSONObjectReader.intArrayToJSONArray(stressSkills) );
+    json.setJSONArray("stressNames",    JSONObjectReader.stringArrayToJSONArray(stressNames) );
+
+//    a = new JSONArray();
+//    for (int i=0; i<stressSkills.length; i++) a.setInt(i, stressSkills[i]);
+//    json.setJSONArray("stressSkills", a);
+//    a = new JSONArray();
+//    for (int i=0; i<stressNames.length; i++) a.setString(i, stressNames[i]);
+//    json.setJSONArray("stressNames", a);
     
     return json;
   }

@@ -46,9 +46,10 @@ public class StressTrack implements JSONable<StressTrack> {
   
   JSONObject toJSON() {
     JSONObject json = new JSONObject();
-    JSONArray array = new JSONArray();
-    for (int i=0; i<track.length; i++) array.setBoolean(i, track[i]);
-    json.setJSONArray("track", array);
+    //JSONArray array = new JSONArray();
+    //for (int i=0; i<track.length; i++) array.setBoolean(i, track[i]);
+    //json.setJSONArray("track", array);
+    json.setJSONArray("track", JSONObjectReader.booleanArrayToJSONArray(track)  );
     return json;
   }
   
